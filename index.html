@@ -1,13 +1,772 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ta">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>சொல் பாதை — Tamil Word Path</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>சொல் பாதை · Sol Paathai — Tamil Word Path</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;600;700&family=EB+Garamond:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+<style>
+  /* ---------- Design tokens ---------- */
+  :root{
+    --leaf:        #E4D3A0;   /* aged palm-leaf background */
+    --leaf-deep:   #C9AF74;   /* leaf shadow / card edge   */
+    --leaf-strip:  #F1E4BB;   /* single leaf-strip / cell  */
+    --ink:         #3B2412;   /* dark sepia ink            */
+    --ink-soft:    #6B4A28;   /* secondary ink             */
+    --thread:      #8B2E2E;   /* stitching-cord red        */
+    --thread-soft: rgba(139,46,46,0.35);
+    --gold:        #A67C27;   /* found-word / accent gold  */
+    --gold-soft:   rgba(166,124,39,0.18);
+    --paper-shadow: 0 10px 30px rgba(59,36,18,0.25), 0 2px 6px rgba(59,36,18,0.18);
+  }
+
+  *{ box-sizing: border-box; }
+
+  html, body{
+    margin:0; padding:0;
+    background: var(--leaf);
+    background-image:
+      repeating-linear-gradient(0deg, rgba(59,36,18,0.035) 0px, rgba(59,36,18,0.035) 1px, transparent 1px, transparent 24px);
+    color: var(--ink);
+    font-family: 'EB Garamond', serif;
+    min-height: 100vh;
+  }
+
+  .tamil{ font-family: 'Noto Sans Tamil', sans-serif; }
+  .bamini-font{ font-family: 'Bamini', 'Noto Sans Tamil', sans-serif; }
+
+  @font-face{
+    font-family: 'Bamini';
+    src: url('./fonts/Bamini.ttf') format('truetype');
+    font-display: swap;
+  }
+
+  .wrap{
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 28px 18px 60px;
+  }
+
+  /* ---------- Header / thesis ---------- */
+  header{
+    text-align:center;
+    margin-bottom: 22px;
+  }
+  .eyebrow{
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+  }
+  h1{
+    font-family: 'Noto Sans Tamil', sans-serif;
+    font-weight:700;
+    font-size: clamp(30px, 8vw, 44px);
+    margin: 0 0 2px;
+    color: var(--ink);
+    letter-spacing: 0.01em;
+  }
+  .subtitle{
+    font-style: italic;
+    color: var(--ink-soft);
+    font-size: 16px;
+    margin: 0;
+  }
+
+  /* theme banner — revealed once spangram is found */
+  .theme-banner{
+    margin: 18px auto 0;
+    max-width: 420px;
+    padding: 10px 18px;
+    border-radius: 3px;
+    background: var(--gold-soft);
+    border: 1px solid var(--gold);
+    color: var(--ink);
+    font-family: 'Noto Sans Tamil', sans-serif;
+    font-size: 18px;
+    text-align:center;
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity .5s ease, transform .5s ease;
+  }
+  .theme-banner.show{ opacity:1; transform: translateY(0); }
+  .theme-banner .en{
+    font-family:'EB Garamond', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--ink-soft);
+    display:block;
+    margin-top: 2px;
+  }
+
+  /* ---------- Manuscript card holding the grid ---------- */
+  .manuscript{
+    position: relative;
+    background: var(--leaf-strip);
+    border-radius: 4px;
+    box-shadow: var(--paper-shadow);
+    padding: 26px 18px 20px;
+    margin-top: 20px;
+    border: 1px solid var(--leaf-deep);
+  }
+  /* binding cord + holes, top and bottom, evoking a bound ஓலைச் சுவடி */
+  .cord-row{
+    position:absolute; left:0; right:0; height:0;
+    border-top: 2px dashed var(--thread-soft);
+  }
+  .cord-row.top{ top:10px; }
+  .cord-row.bottom{ bottom:10px; }
+  .hole{
+    position:absolute;
+    width:9px; height:9px;
+    border-radius:50%;
+    background: var(--leaf);
+    border: 1px solid var(--leaf-deep);
+    top: 6px;
+  }
+  .hole.left{ left: 14%; }
+  .hole.right{ right: 14%; }
+  .hole.bottom-left{ left:14%; bottom:6px; top:auto; }
+  .hole.bottom-right{ right:14%; bottom:6px; top:auto; }
+
+  .grid-outer{
+    position: relative;
+    margin: 18px auto 6px;
+    width: min(94vw, 460px);
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .grid{
+    display: grid;
+    gap: 6px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .cell{
+    position: relative;
+    aspect-ratio: 1 / 1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size: clamp(15px, 4vw, 21px);
+    font-weight: 600;
+    color: var(--ink);
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.25), rgba(255,255,255,0) 40%),
+      var(--leaf);
+    border: 1px solid var(--leaf-deep);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background .12s ease, color .12s ease, transform .12s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .cell.in-path{
+    background: var(--thread);
+    color: #F6E9C9;
+    transform: scale(1.06);
+  }
+  .cell.found-word{
+    background: var(--gold-soft);
+    border-color: var(--gold);
+    color: var(--ink);
+  }
+  .cell.found-spangram{
+    background: var(--thread-soft);
+    border-color: var(--thread);
+    color: var(--ink);
+  }
+
+  .thread-svg{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    z-index: 3;
+    pointer-events:none;
+  }
+  .thread-svg path{
+    fill:none;
+    stroke: var(--thread);
+    stroke-width: 5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: 0.85;
+  }
+
+  /* ---------- Controls & status ---------- */
+  .controls{
+    display:flex;
+    justify-content:center;
+    gap: 10px;
+    margin-top: 18px;
+    flex-wrap: wrap;
+  }
+  button.action{
+    font-family:'EB Garamond', serif;
+    font-size: 15px;
+    letter-spacing:0.02em;
+    padding: 8px 16px;
+    border-radius: 3px;
+    border: 1px solid var(--ink-soft);
+    background: transparent;
+    color: var(--ink);
+    cursor:pointer;
+    transition: background .15s ease, color .15s ease;
+  }
+  button.action:hover{ background: var(--ink); color: var(--leaf-strip); }
+
+  .status-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top: 16px;
+    font-size: 14px;
+    color: var(--ink-soft);
+  }
+
+  .found-list{
+    margin-top: 14px;
+    display:flex;
+    flex-wrap:wrap;
+    gap: 8px;
+    justify-content:center;
+  }
+  .found-chip{
+    font-family:'Noto Sans Tamil', sans-serif;
+    background: var(--gold-soft);
+    border: 1px solid var(--gold);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 14px;
+  }
+
+  .bamini-toggle{
+    text-align:center;
+    margin-top: 18px;
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+  .bamini-toggle label{ cursor:pointer; }
+  .bamini-toggle .hint{
+    display:block;
+    font-size: 11.5px;
+    margin-top: 3px;
+    opacity: 0.75;
+  }
+
+  /* ---------- Win modal ---------- */
+  .modal-backdrop{
+    position: fixed; inset:0;
+    background: rgba(59,36,18,0.55);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index: 50;
+    padding: 20px;
+  }
+  .modal-backdrop.show{ display:flex; }
+  .modal{
+    background: var(--leaf-strip);
+    border: 1px solid var(--leaf-deep);
+    border-radius: 6px;
+    padding: 30px 26px;
+    max-width: 380px;
+    text-align:center;
+    box-shadow: var(--paper-shadow);
+    transform: scale(0.92);
+    opacity: 0;
+    animation: pop-in .35s ease forwards;
+  }
+  @keyframes pop-in{ to{ transform: scale(1); opacity:1; } }
+  .modal h2{
+    font-family:'Noto Sans Tamil', sans-serif;
+    margin: 0 0 8px;
+    color: var(--ink);
+  }
+  .modal p{ color: var(--ink-soft); margin: 0 0 18px; }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Strands-style · Tamil word path</div>
+    <h1>சொல் பாதை</h1>
+    <p class="subtitle">Sol Paathai — trace the words hidden in the leaf</p>
+  </header>
+
+  <div id="themeBanner" class="theme-banner">
+    <span id="themeTamil" class="tamil"></span>
+    <span id="themeEnglish" class="en"></span>
+  </div>
+
+  <div class="manuscript">
+    <div class="cord-row top"></div>
+    <div class="hole left" style="top:6px;"></div>
+    <div class="hole right" style="top:6px;"></div>
+    <div class="hole bottom-left"></div>
+    <div class="hole bottom-right"></div>
+
+    <div class="grid-outer" id="gridOuter">
+      <svg class="thread-svg" id="threadSvg"></svg>
+      <div class="grid" id="grid"></div>
+    </div>
+
+    <div class="status-row">
+      <span id="progressLabel">0 / 0 words found</span>
+      <span id="spangramLabel">Spangram hidden</span>
+    </div>
+
+    <div class="found-list" id="foundList"></div>
+  </div>
+
+  <div class="controls">
+    <button class="action" id="reshuffleBtn">New layout</button>
+    <button class="action" id="revealBtn">Reveal a letter</button>
+  </div>
+
+  <div class="bamini-toggle">
+    <label><input type="checkbox" id="baminiCheck"> Display in Bamini font</label>
+    <span class="hint">Needs a Bamini.ttf file at ./fonts/Bamini.ttf next to this page — falls back to Unicode Tamil if it isn't found.</span>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="winBackdrop">
+  <div class="modal">
+    <h2>அருமை! 🌴</h2>
+    <p>You've traced every word and found the spangram.</p>
+    <button class="action" id="playAgainBtn">Play again</button>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   Step 3 — Puzzle data
+   (kept as a JS object here instead of a fetched JSON file,
+   since everything lives in one HTML file)
+   ========================================================= */
+const PUZZLES = [
+  {
+    theme: "விலங்குகள்",
+    themeEnglish: "Animals",
+    spangram: "யானை",
+    words: ["சிங்கம்", "புலி", "மான்", "நரி", "குரங்கு", "முயல்"],
+    gridSize: { rows: 7, cols: 7 }
+  },
+  {
+    theme: "பழங்கள்",
+    themeEnglish: "Fruits",
+    spangram: "பலாப்பழம்",
+    words: ["மாம்பழம்", "வாழைப்பழம்", "திராட்சை", "நெல்லிக்காய்", "பேரிச்சை"],
+    gridSize: { rows: 8, cols: 8 }
+  }
+];
+
+let currentPuzzleIndex = 0;
+
+/* =========================================================
+   Step 4 — Grapheme splitter
+   ========================================================= */
+function splitGraphemes(word) {
+  if (typeof Intl !== 'undefined' && Intl.Segmenter) {
+    try {
+      const segmenter = new Intl.Segmenter('ta', { granularity: 'grapheme' });
+      return Array.from(segmenter.segment(word), s => s.segment);
+    } catch (e) {
+      return manualSplit(word);
+    }
+  }
+  return manualSplit(word);
+}
+
+// Manual fallback: groups a base consonant/vowel with any following
+// vowel-signs or virama, mirroring the Unity-side splitter's logic.
+function manualSplit(word) {
+  const isVowelSign = c => c >= '\u0BBE' && c <= '\u0BCC';
+  const isVirama = c => c === '\u0BCD';
+  const units = [];
+  let current = '';
+  for (const c of word) {
+    if (isVowelSign(c) || isVirama(c)) {
+      current += c;
+    } else {
+      if (current) units.push(current);
+      current = c;
+    }
+  }
+  if (current) units.push(current);
+  return units;
+}
+
+/* =========================================================
+   Step 5 — Unicode → Bamini converter
+   NOTE: this mapping is a skeleton, exactly like the guide warns.
+   It has NOT been verified against a real Bamini.ttf byte table,
+   so treat display-only and double check before relying on it.
+   ========================================================= */
+const unicodeToBamini = {
+  'க': 'f', 'ங': '\u0069', 'ச': 'r', 'ஞ': '»',
+  'ட': 'l', 'ண': 'z', 'த': 'j', 'ந': 'e',
+  'ப': 'g', 'ம': 'k', 'ய': 'ahp', 'ர': 'u',
+  'ல': 'y', 'வ': 't', 'ழ': 'S', 'ள': 's',
+  'ற': 'w', 'ன': 'd'
+  // Vowel signs intentionally left as-is below (see preBaseVowelSigns) —
+  // fill in verified values from your specific font's mapping table.
+};
+
+const preBaseVowelSigns = new Set(['\u0BC6', '\u0BC7', '\u0BC8']); // ெ ே ை
+
+function convertUnit(unicodeUnit) {
+  if (!unicodeUnit) return '';
+  const chars = Array.from(unicodeUnit);
+  const baseChar = chars[0];
+  const baseBamini = unicodeToBamini[baseChar] ?? baseChar;
+  if (chars.length === 1) return baseBamini;
+
+  let prefix = '';
+  let suffix = '';
+  for (let i = 1; i < chars.length; i++) {
+    const mark = chars[i];
+    const markBamini = unicodeToBamini[mark] ?? mark;
+    if (preBaseVowelSigns.has(mark)) prefix += markBamini;
+    else suffix += markBamini;
+  }
+  return prefix + baseBamini + suffix;
+}
+
+/* =========================================================
+   Step 6 — Grid generation (theme words + filler)
+   ========================================================= */
+const FILLER_UNITS = ['க', 'ன', 'ர', 'ல', 'மா', 'வா', 'தி', 'சு', 'டா', 'பா', 'யா', 'ரி', 'லா', 'வி', 'மி', 'நா'];
+const DIRECTIONS = [
+  [-1, -1], [-1, 0], [-1, 1],
+  [0, -1],           [0, 1],
+  [1, -1],  [1, 0],  [1, 1]
+];
+
+function generateGrid(puzzle) {
+  const { rows, cols } = puzzle.gridSize;
+  const grid = Array.from({ length: rows }, () => Array.from({ length: cols }, () => null));
+
+  // Spangram first, since it's longest / most constrained — placing it
+  // while the grid is still empty gives it the best odds.
+  const placements = [
+    { word: puzzle.spangram, isSpangram: true },
+    ...puzzle.words.map(w => ({ word: w, isSpangram: false }))
+  ];
+
+  for (const { word, isSpangram } of placements) {
+    const units = splitGraphemes(word);
+    const ok = placeWordOnGrid(grid, units, rows, cols, word, isSpangram);
+    if (!ok) console.warn('Could not place word:', word);
+  }
+
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      if (!grid[r][c]) {
+        grid[r][c] = {
+          letterUnit: FILLER_UNITS[Math.floor(Math.random() * FILLER_UNITS.length)],
+          row: r, col: c,
+          isPartOfWord: false, isSpangram: false, sourceWord: null
+        };
+      }
+    }
+  }
+  return grid;
+}
+
+function placeWordOnGrid(grid, units, rows, cols, sourceWord, isSpangram, attempts = 400) {
+  for (let attempt = 0; attempt < attempts; attempt++) {
+    const startRow = Math.floor(Math.random() * rows);
+    const startCol = Math.floor(Math.random() * cols);
+    const path = tryBuildPath(grid, units, startRow, startCol, rows, cols);
+    if (path) {
+      path.forEach(({ row, col }, i) => {
+        grid[row][col] = {
+          letterUnit: units[i], row, col,
+          isPartOfWord: false, isSpangram: false, sourceWord
+        };
+      });
+      return true;
+    }
+  }
+  return false;
+}
+
+function tryBuildPath(grid, units, startRow, startCol, rows, cols) {
+  if (grid[startRow][startCol]) return null;
+  const path = [{ row: startRow, col: startCol }];
+  const visited = new Set([`${startRow},${startCol}`]);
+
+  for (let i = 1; i < units.length; i++) {
+    const last = path[path.length - 1];
+    const options = DIRECTIONS
+      .map(([dr, dc]) => ({ row: last.row + dr, col: last.col + dc }))
+      .filter(({ row, col }) =>
+        row >= 0 && row < rows && col >= 0 && col < cols &&
+        !visited.has(`${row},${col}`) &&
+        !grid[row][col]
+      );
+    if (options.length === 0) return null;
+    const next = options[Math.floor(Math.random() * options.length)];
+    path.push(next);
+    visited.add(`${next.row},${next.col}`);
+  }
+  return path;
+}
+
+/* =========================================================
+   Step 8 — Validate a traced path against the puzzle
+   ========================================================= */
+function validatePath(path, puzzle, foundWords, spangramFound) {
+  const traced = path.map(c => c.letterUnit).join('');
+  const reversed = path.map(c => c.letterUnit).slice().reverse().join('');
+
+  if (!spangramFound && (traced === puzzle.spangram || reversed === puzzle.spangram)) {
+    return { type: 'spangram' };
+  }
+  const match = puzzle.words.find(w => (w === traced || w === reversed) && !foundWords.includes(w));
+  if (match) return { type: 'word', word: match };
+  return { type: 'none' };
+}
+
+/* =========================================================
+   App state + rendering
+   ========================================================= */
+let puzzle, grid, foundWords, spangramFound, currentPath, isDragging;
+
+const gridEl = document.getElementById('grid');
+const gridOuterEl = document.getElementById('gridOuter');
+const threadSvg = document.getElementById('threadSvg');
+const themeBanner = document.getElementById('themeBanner');
+const themeTamilEl = document.getElementById('themeTamil');
+const themeEnglishEl = document.getElementById('themeEnglish');
+const progressLabel = document.getElementById('progressLabel');
+const spangramLabel = document.getElementById('spangramLabel');
+const foundListEl = document.getElementById('foundList');
+const winBackdrop = document.getElementById('winBackdrop');
+const baminiCheck = document.getElementById('baminiCheck');
+
+function startPuzzle(index) {
+  currentPuzzleIndex = index;
+  puzzle = PUZZLES[index];
+  grid = generateGrid(puzzle);
+  foundWords = [];
+  spangramFound = false;
+  currentPath = [];
+  isDragging = false;
+
+  themeBanner.classList.remove('show');
+  themeTamilEl.textContent = '';
+  themeEnglishEl.textContent = '';
+  winBackdrop.classList.remove('show');
+
+  renderGrid();
+  updateStatus();
+}
+
+function displayText(unit) {
+  return baminiCheck.checked ? convertUnit(unit) : unit;
+}
+
+function renderGrid() {
+  gridEl.style.gridTemplateColumns = `repeat(${puzzle.gridSize.cols}, 1fr)`;
+  gridEl.innerHTML = '';
+
+  for (let r = 0; r < puzzle.gridSize.rows; r++) {
+    for (let c = 0; c < puzzle.gridSize.cols; c++) {
+      const cellData = grid[r][c];
+      const cellEl = document.createElement('div');
+      cellEl.className = 'cell' + (baminiCheck.checked ? ' bamini-font' : ' tamil');
+      cellEl.dataset.row = r;
+      cellEl.dataset.col = c;
+      cellEl.textContent = displayText(cellData.letterUnit);
+      applyCellClasses(cellEl, cellData);
+
+      cellEl.addEventListener('pointerdown', () => onPointerDown(cellData));
+      cellEl.addEventListener('pointerenter', () => onPointerEnter(cellData));
+
+      gridEl.appendChild(cellEl);
+    }
+  }
+}
+
+function applyCellClasses(cellEl, cellData) {
+  cellEl.classList.toggle('found-spangram', cellData.isSpangram);
+  cellEl.classList.toggle('found-word', cellData.isPartOfWord && !cellData.isSpangram);
+}
+
+function cellElAt(r, c) {
+  return gridEl.querySelector(`.cell[data-row="${r}"][data-col="${c}"]`);
+}
+
+function isAdjacent(a, b) {
+  const dr = Math.abs(a.row - b.row);
+  const dc = Math.abs(a.col - b.col);
+  return dr <= 1 && dc <= 1 && !(dr === 0 && dc === 0);
+}
+
+/* ---------- Step 7 — drag / path tracing ---------- */
+function onPointerDown(cellData) {
+  isDragging = true;
+  currentPath = [cellData];
+  drawPathHighlights();
+  drawThread();
+}
+
+function onPointerEnter(cellData) {
+  if (!isDragging) return;
+  const last = currentPath[currentPath.length - 1];
+
+  // backtrack: re-entering the second-to-last cell removes the last one
+  const prevIdx = currentPath.length - 2;
+  if (prevIdx >= 0 && currentPath[prevIdx].row === cellData.row && currentPath[prevIdx].col === cellData.col) {
+    currentPath.pop();
+    drawPathHighlights();
+    drawThread();
+    return;
+  }
+
+  if (currentPath.some(p => p.row === cellData.row && p.col === cellData.col)) return; // no repeats
+  if (!isAdjacent(last, cellData)) return;
+
+  currentPath.push(cellData);
+  drawPathHighlights();
+  drawThread();
+}
+
+function finishDrag() {
+  if (!isDragging) return;
+  isDragging = false;
+
+  if (currentPath.length >= 2) {
+    const result = validatePath(currentPath, puzzle, foundWords, spangramFound);
+    if (result.type === 'spangram') handleSpangramFound();
+    else if (result.type === 'word') handleWordFound(result.word);
+  }
+
+  currentPath = [];
+  drawPathHighlights();
+  drawThread();
+}
+
+gridOuterEl.addEventListener('pointerup', finishDrag);
+gridOuterEl.addEventListener('pointerleave', () => { if (isDragging) finishDrag(); });
+
+function drawPathHighlights() {
+  gridEl.querySelectorAll('.cell').forEach(el => el.classList.remove('in-path'));
+  currentPath.forEach(({ row, col }) => {
+    const el = cellElAt(row, col);
+    if (el) el.classList.add('in-path');
+  });
+}
+
+function drawThread() {
+  threadSvg.innerHTML = '';
+  if (currentPath.length < 2) return;
+
+  const outerRect = gridOuterEl.getBoundingClientRect();
+  threadSvg.setAttribute('viewBox', `0 0 ${outerRect.width} ${outerRect.height}`);
+
+  const points = currentPath.map(({ row, col }) => {
+    const el = cellElAt(row, col);
+    const r = el.getBoundingClientRect();
+    return [
+      r.left - outerRect.left + r.width / 2,
+      r.top - outerRect.top + r.height / 2
+    ];
+  });
+
+  const d = points.map((p, i) => (i === 0 ? `M ${p[0]} ${p[1]}` : `L ${p[0]} ${p[1]}`)).join(' ');
+  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  path.setAttribute('d', d);
+  threadSvg.appendChild(path);
+}
+
+/* ---------- Found handling ---------- */
+function handleWordFound(word) {
+  foundWords.push(word);
+  const units = currentPath.map(c => c.letterUnit);
+  currentPath.forEach(({ row, col }) => { grid[row][col].isPartOfWord = true; });
+  currentPath.forEach(({ row, col }) => {
+    const el = cellElAt(row, col);
+    applyCellClasses(el, grid[row][col]);
+  });
+  updateStatus();
+  checkWin();
+}
+
+function handleSpangramFound() {
+  spangramFound = true;
+  currentPath.forEach(({ row, col }) => { grid[row][col].isSpangram = true; });
+  currentPath.forEach(({ row, col }) => {
+    const el = cellElAt(row, col);
+    applyCellClasses(el, grid[row][col]);
+  });
+  themeTamilEl.textContent = puzzle.theme;
+  themeEnglishEl.textContent = puzzle.themeEnglish;
+  themeBanner.classList.add('show');
+  updateStatus();
+  checkWin();
+}
+
+function updateStatus() {
+  progressLabel.textContent = `${foundWords.length} / ${puzzle.words.length} words found`;
+  spangramLabel.textContent = spangramFound ? 'Spangram found ✓' : 'Spangram hidden';
+
+  foundListEl.innerHTML = '';
+  foundWords.forEach(w => {
+    const chip = document.createElement('span');
+    chip.className = 'found-chip tamil';
+    chip.textContent = w;
+    foundListEl.appendChild(chip);
+  });
+}
+
+function checkWin() {
+  if (spangramFound && foundWords.length === puzzle.words.length) {
+    setTimeout(() => winBackdrop.classList.add('show'), 400);
+  }
+}
+
+/* ---------- Controls ---------- */
+document.getElementById('reshuffleBtn').addEventListener('click', () => startPuzzle(currentPuzzleIndex));
+document.getElementById('playAgainBtn').addEventListener('click', () => {
+  const nextIndex = (currentPuzzleIndex + 1) % PUZZLES.length;
+  startPuzzle(nextIndex);
+});
+document.getElementById('revealBtn').addEventListener('click', () => {
+  const remaining = puzzle.words.filter(w => !foundWords.includes(w));
+  if (remaining.length === 0) return;
+  const word = remaining[0];
+  const units = splitGraphemes(word);
+  // find that word's cells in the grid and flash the first letter
+  for (let r = 0; r < puzzle.gridSize.rows; r++) {
+    for (let c = 0; c < puzzle.gridSize.cols; c++) {
+      if (grid[r][c].sourceWord === word) {
+        const el = cellElAt(r, c);
+        el.style.outline = '3px solid var(--thread)';
+        setTimeout(() => { el.style.outline = 'none'; }, 1400);
+        return;
+      }
+    }
+  }
+});
+baminiCheck.addEventListener('change', renderGrid);
+window.addEventListener('resize', drawThread);
+
+/* ---------- Boot ---------- */
+startPuzzle(0);
+</script>
+</body>
 </html>
