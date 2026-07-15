@@ -149,33 +149,42 @@
   }
 
   .cell{
-    position: relative;
-    aspect-ratio: 1 / 1;
+    aspect-ratio:1/1;
+
     display:flex;
     align-items:center;
     justify-content:center;
-    font-size: clamp(15px, 4vw, 21px);
-    font-weight: 600;
-    color: var(--ink);
+
+    width:82%;
+    height:82%;
+
+    margin:auto;
+
+    font-size:clamp(15px,4vw,21px);
+
     background:
-      linear-gradient(180deg, rgba(255,255,255,0.25), rgba(255,255,255,0) 40%),
+      linear-gradient(180deg,
+      rgba(255,255,255,.25),
+      rgba(255,255,255,0) 40%),
       var(--leaf);
-    border: 1px solid var(--leaf-deep);
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background .12s ease, color .12s ease, transform .12s ease;
-    -webkit-tap-highlight-color: transparent;
-  }
+
+    border:1px solid var(--leaf-deep);
+    border-radius:8px;
+
+    cursor:pointer;
+
+    transition:.12s;
+}
   .cell.in-path{
     background: var(--thread);
     color: #F6E9C9;
     transform: scale(1.06);
   }
   .cell.found-word{
-    background: var(--gold-soft);
-    border-color: var(--gold);
-    color: var(--ink);
-  }
+    background: #7b7b7b;
+    border-color: #666;
+    color: white;
+}
   .cell.found-spangram{
     background: var(--thread-soft);
     border-color: var(--thread);
