@@ -35,13 +35,6 @@
   }
 
   .tamil{ font-family: 'Noto Sans Tamil', sans-serif; }
-  .bamini-font{ font-family: 'Bamini', 'Noto Sans Tamil', sans-serif; }
-
-  @font-face{
-    font-family: 'Bamini';
-    src: url('./fonts/Bamini.ttf') format('truetype');
-    font-display: swap;
-  }
 
   .wrap{
     max-width: 620px;
@@ -201,11 +194,17 @@
   }
   .thread-svg path{
     fill:none;
-    stroke: var(--thread);
     stroke-width: 5;
     stroke-linecap: round;
     stroke-linejoin: round;
     opacity: 0.85;
+  }
+  .thread-svg path.thread-active{
+    stroke: var(--thread);
+  }
+  .thread-svg path.thread-found{
+    stroke: #8a8378;   /* muted gray-brown, reads as "already traced" on the leaf */
+    opacity: 0.65;
   }
 
   /* ---------- Controls & status ---------- */
@@ -261,20 +260,43 @@
     border-radius: 20px;
     padding: 4px 12px;
     font-size: 14px;
+    cursor: pointer;
+    transition: background .15s ease;
   }
+  .found-chip:hover{ background: var(--gold); color: var(--leaf-strip); }
 
-  .bamini-toggle{
-    text-align:center;
-    margin-top: 18px;
-    font-size: 13px;
-    color: var(--ink-soft);
+  /* ---------- Meaning toast (shown briefly when a word is found) ---------- */
+  .meaning-toast{
+    position: fixed;
+    left: 50%;
+    bottom: 28px;
+    transform: translate(-50%, 12px);
+    background: var(--ink);
+    color: var(--leaf-strip);
+    padding: 10px 20px;
+    border-radius: 24px;
+    box-shadow: 0 8px 20px rgba(59,36,18,0.35);
+    font-size: 15px;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    max-width: 90vw;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .3s ease, transform .3s ease;
+    z-index: 60;
   }
-  .bamini-toggle label{ cursor:pointer; }
-  .bamini-toggle .hint{
-    display:block;
-    font-size: 11.5px;
-    margin-top: 3px;
-    opacity: 0.75;
+  .meaning-toast.show{
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  .meaning-toast .mt-word{
+    font-family: 'Noto Sans Tamil', sans-serif;
+    font-weight: 600;
+  }
+  .meaning-toast .mt-meaning{
+    font-style: italic;
+    opacity: 0.9;
   }
 
   /* ---------- Win modal ---------- */
@@ -351,11 +373,11 @@
     <button class="action" id="reshuffleBtn">New layout</button>
     <button class="action" id="revealBtn">Reveal a letter</button>
   </div>
+</div>
 
-  <div class="bamini-toggle">
-    <label><input type="checkbox" id="baminiCheck"> Display in Bamini font</label>
-    <span class="hint">Needs a Bamini.ttf file at ./fonts/Bamini.ttf next to this page — falls back to Unicode Tamil if it isn't found.</span>
-  </div>
+<div class="meaning-toast" id="meaningToast">
+  <span class="mt-word tamil" id="toastWord"></span>
+  <span class="mt-meaning" id="toastMeaning"></span>
 </div>
 
 <div class="modal-backdrop" id="winBackdrop">
@@ -371,20 +393,47 @@
    Step 3 — Puzzle data
    (kept as a JS object here instead of a fetched JSON file,
    since everything lives in one HTML file)
+
+   Each word/spangram now carries:
+     - meaning: short English gloss, shown in the found toast
+                and as the chip's headline in the detail modal
+     - description: a sentence or two of extra context, shown
+                only when the person opens the word's detail modal
    ========================================================= */
 const PUZZLES = [
   {
     theme: "விலங்குகள்",
     themeEnglish: "Animals",
-    spangram: "யானை",
-    words: ["சிங்கம்", "புலி", "மான்", "நரி", "குரங்கு", "முயல்"],
+    spangram: {
+      word: "யானை",
+      meaning: "elephant",
+      description: "யானை (yaanai) — the elephant, revered in Tamil culture as the vehicle of Lord Vinayagar and a recurring symbol of strength and memory."
+    },
+    words: [
+      { word: "சிங்கம்", meaning: "lion", description: "சிங்கம் (singam) — the lion. It lends its name to the Tamil month Simha (Aug–Sep) and appears often in temple sculpture as a guardian figure." },
+      { word: "புலி", meaning: "tiger", description: "புலி (puli) — the tiger, a striped big cat found in Tamil Nadu's forests and a common motif in folk art and place names." },
+      { word: "மான்", meaning: "deer", description: "மான் (maan) — the deer. Its grace is a classical simile for a beloved's eyes in Tamil poetry (மான் விழி, 'deer-eyed')." },
+      { word: "நரி", meaning: "fox / jackal", description: "நரி (nari) — the fox or jackal, the clever trickster of many Tamil folk tales." },
+      { word: "குரங்கு", meaning: "monkey", description: "குரங்கு (kurangu) — the monkey, playful and agile, often seen in temple towns and village folklore." },
+      { word: "முயல்", meaning: "rabbit / hare", description: "முயல் (muyal) — the rabbit or hare, known in folklore for outwitting bigger, slower animals." }
+    ],
     gridSize: { rows: 7, cols: 7 }
   },
   {
     theme: "பழங்கள்",
     themeEnglish: "Fruits",
-    spangram: "பலாப்பழம்",
-    words: ["மாம்பழம்", "வாழைப்பழம்", "திராட்சை", "நெல்லிக்காய்", "பேரிச்சை"],
+    spangram: {
+      word: "பலாப்பழம்",
+      meaning: "jackfruit",
+      description: "பலாப்பழம் (palaappazham) — the jackfruit, one of the largest tree-borne fruits in the world and a Tamil Nadu favourite, eaten fresh or made into chips."
+    },
+    words: [
+      { word: "மாம்பழம்", meaning: "mango", description: "மாம்பழம் (maambazham) — the mango, often called the king of fruits, central to Tamil summers and festivals." },
+      { word: "வாழைப்பழம்", meaning: "banana", description: "வாழைப்பழம் (vaazhaipazham) — the banana. The whole plant is used ceremonially in Tamil households, from the fruit to the leaf." },
+      { word: "திராட்சை", meaning: "grape", description: "திராட்சை (thiraatchai) — the grape, enjoyed fresh and also referenced in classical Tamil texts on taste and sweetness." },
+      { word: "நெல்லிக்காய்", meaning: "gooseberry (amla)", description: "நெல்லிக்காய் (nellikkaai) — the Indian gooseberry, prized in Siddha medicine for its high vitamin C content." },
+      { word: "பேரிச்சை", meaning: "date", description: "பேரிச்சை (peraichai) — the date fruit, sweet and dense, commonly eaten to break a fast or as a snack." }
+    ],
     gridSize: { rows: 8, cols: 8 }
   }
 ];
@@ -426,42 +475,6 @@ function manualSplit(word) {
 }
 
 /* =========================================================
-   Step 5 — Unicode → Bamini converter
-   NOTE: this mapping is a skeleton, exactly like the guide warns.
-   It has NOT been verified against a real Bamini.ttf byte table,
-   so treat display-only and double check before relying on it.
-   ========================================================= */
-const unicodeToBamini = {
-  'க': 'f', 'ங': '\u0069', 'ச': 'r', 'ஞ': '»',
-  'ட': 'l', 'ண': 'z', 'த': 'j', 'ந': 'e',
-  'ப': 'g', 'ம': 'k', 'ய': 'ahp', 'ர': 'u',
-  'ல': 'y', 'வ': 't', 'ழ': 'S', 'ள': 's',
-  'ற': 'w', 'ன': 'd'
-  // Vowel signs intentionally left as-is below (see preBaseVowelSigns) —
-  // fill in verified values from your specific font's mapping table.
-};
-
-const preBaseVowelSigns = new Set(['\u0BC6', '\u0BC7', '\u0BC8']); // ெ ே ை
-
-function convertUnit(unicodeUnit) {
-  if (!unicodeUnit) return '';
-  const chars = Array.from(unicodeUnit);
-  const baseChar = chars[0];
-  const baseBamini = unicodeToBamini[baseChar] ?? baseChar;
-  if (chars.length === 1) return baseBamini;
-
-  let prefix = '';
-  let suffix = '';
-  for (let i = 1; i < chars.length; i++) {
-    const mark = chars[i];
-    const markBamini = unicodeToBamini[mark] ?? mark;
-    if (preBaseVowelSigns.has(mark)) prefix += markBamini;
-    else suffix += markBamini;
-  }
-  return prefix + baseBamini + suffix;
-}
-
-/* =========================================================
    Step 6 — Grid generation (theme words + filler)
    ========================================================= */
 const FILLER_UNITS = ['க', 'ன', 'ர', 'ல', 'மா', 'வா', 'தி', 'சு', 'டா', 'பா', 'யா', 'ரி', 'லா', 'வி', 'மி', 'நா'];
@@ -478,8 +491,8 @@ function generateGrid(puzzle) {
   // Spangram first, since it's longest / most constrained — placing it
   // while the grid is still empty gives it the best odds.
   const placements = [
-    { word: puzzle.spangram, isSpangram: true },
-    ...puzzle.words.map(w => ({ word: w, isSpangram: false }))
+    { word: puzzle.spangram.word, isSpangram: true },
+    ...puzzle.words.map(w => ({ word: w.word, isSpangram: false }))
   ];
 
   for (const { word, isSpangram } of placements) {
@@ -549,18 +562,18 @@ function validatePath(path, puzzle, foundWords, spangramFound) {
   const traced = path.map(c => c.letterUnit).join('');
   const reversed = path.map(c => c.letterUnit).slice().reverse().join('');
 
-  if (!spangramFound && (traced === puzzle.spangram || reversed === puzzle.spangram)) {
+  if (!spangramFound && (traced === puzzle.spangram.word || reversed === puzzle.spangram.word)) {
     return { type: 'spangram' };
   }
-  const match = puzzle.words.find(w => (w === traced || w === reversed) && !foundWords.includes(w));
-  if (match) return { type: 'word', word: match };
+  const match = puzzle.words.find(w => (w.word === traced || w.word === reversed) && !foundWords.some(f => f.word === w.word));
+  if (match) return { type: 'word', entry: match };
   return { type: 'none' };
 }
 
 /* =========================================================
    App state + rendering
    ========================================================= */
-let puzzle, grid, foundWords, spangramFound, currentPath, isDragging;
+let puzzle, grid, foundWords, foundPaths, spangramFound, currentPath, isDragging, toastTimer;
 
 const gridEl = document.getElementById('grid');
 const gridOuterEl = document.getElementById('gridOuter');
@@ -572,13 +585,16 @@ const progressLabel = document.getElementById('progressLabel');
 const spangramLabel = document.getElementById('spangramLabel');
 const foundListEl = document.getElementById('foundList');
 const winBackdrop = document.getElementById('winBackdrop');
-const baminiCheck = document.getElementById('baminiCheck');
+const meaningToast = document.getElementById('meaningToast');
+const toastWordEl = document.getElementById('toastWord');
+const toastMeaningEl = document.getElementById('toastMeaning');
 
 function startPuzzle(index) {
   currentPuzzleIndex = index;
   puzzle = PUZZLES[index];
   grid = generateGrid(puzzle);
-  foundWords = [];
+  foundWords = []; // array of { word, meaning, description, isSpangram }
+  foundPaths = []; // array of {row,col} paths already traced, drawn in gray permanently
   spangramFound = false;
   currentPath = [];
   isDragging = false;
@@ -587,13 +603,10 @@ function startPuzzle(index) {
   themeTamilEl.textContent = '';
   themeEnglishEl.textContent = '';
   winBackdrop.classList.remove('show');
+  hideToast(true);
 
   renderGrid();
   updateStatus();
-}
-
-function displayText(unit) {
-  return baminiCheck.checked ? convertUnit(unit) : unit;
 }
 
 function renderGrid() {
@@ -604,10 +617,10 @@ function renderGrid() {
     for (let c = 0; c < puzzle.gridSize.cols; c++) {
       const cellData = grid[r][c];
       const cellEl = document.createElement('div');
-      cellEl.className = 'cell' + (baminiCheck.checked ? ' bamini-font' : ' tamil');
+      cellEl.className = 'cell tamil';
       cellEl.dataset.row = r;
       cellEl.dataset.col = c;
-      cellEl.textContent = displayText(cellData.letterUnit);
+      cellEl.textContent = cellData.letterUnit;
       applyCellClasses(cellEl, cellData);
 
       cellEl.addEventListener('pointerdown', () => onPointerDown(cellData));
@@ -669,7 +682,7 @@ function finishDrag() {
   if (currentPath.length >= 2) {
     const result = validatePath(currentPath, puzzle, foundWords, spangramFound);
     if (result.type === 'spangram') handleSpangramFound();
-    else if (result.type === 'word') handleWordFound(result.word);
+    else if (result.type === 'word') handleWordFound(result.entry);
   }
 
   currentPath = [];
@@ -690,12 +703,20 @@ function drawPathHighlights() {
 
 function drawThread() {
   threadSvg.innerHTML = '';
-  if (currentPath.length < 2) return;
 
   const outerRect = gridOuterEl.getBoundingClientRect();
   threadSvg.setAttribute('viewBox', `0 0 ${outerRect.width} ${outerRect.height}`);
 
-  const points = currentPath.map(({ row, col }) => {
+  // Permanent gray threads for every word already found, so kids can see
+  // at a glance which paths they've already traced.
+  foundPaths.forEach(p => drawPathLine(p, 'thread-found', outerRect));
+
+  // The path currently being dragged, drawn in the active thread color.
+  if (currentPath.length >= 2) drawPathLine(currentPath, 'thread-active', outerRect);
+}
+
+function drawPathLine(cellsPath, cssClass, outerRect) {
+  const points = cellsPath.map(({ row, col }) => {
     const el = cellElAt(row, col);
     const r = el.getBoundingClientRect();
     return [
@@ -707,24 +728,43 @@ function drawThread() {
   const d = points.map((p, i) => (i === 0 ? `M ${p[0]} ${p[1]}` : `L ${p[0]} ${p[1]}`)).join(' ');
   const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
   path.setAttribute('d', d);
+  path.setAttribute('class', cssClass);
   threadSvg.appendChild(path);
 }
 
+/* ---------- Meaning toast ---------- */
+function showToast(word, meaning) {
+  clearTimeout(toastTimer);
+  toastWordEl.textContent = word;
+  toastMeaningEl.textContent = `— ${meaning}`;
+  meaningToast.classList.add('show');
+  toastTimer = setTimeout(() => hideToast(false), 2600);
+}
+
+function hideToast(instant) {
+  meaningToast.classList.remove('show');
+  if (instant) clearTimeout(toastTimer);
+}
+
 /* ---------- Found handling ---------- */
-function handleWordFound(word) {
-  foundWords.push(word);
-  const units = currentPath.map(c => c.letterUnit);
+function handleWordFound(entry) {
+  foundWords.push({ word: entry.word, meaning: entry.meaning, description: entry.description, isSpangram: false });
+  foundPaths.push(currentPath.slice());
   currentPath.forEach(({ row, col }) => { grid[row][col].isPartOfWord = true; });
   currentPath.forEach(({ row, col }) => {
     const el = cellElAt(row, col);
     applyCellClasses(el, grid[row][col]);
   });
+  showToast(entry.word, entry.meaning);
   updateStatus();
   checkWin();
 }
 
 function handleSpangramFound() {
   spangramFound = true;
+  const entry = puzzle.spangram;
+  foundWords.push({ word: entry.word, meaning: entry.meaning, description: entry.description, isSpangram: true });
+  foundPaths.push(currentPath.slice());
   currentPath.forEach(({ row, col }) => { grid[row][col].isSpangram = true; });
   currentPath.forEach(({ row, col }) => {
     const el = cellElAt(row, col);
@@ -733,25 +773,31 @@ function handleSpangramFound() {
   themeTamilEl.textContent = puzzle.theme;
   themeEnglishEl.textContent = puzzle.themeEnglish;
   themeBanner.classList.add('show');
+  showToast(entry.word, `${entry.meaning} · spangram`);
   updateStatus();
   checkWin();
 }
 
 function updateStatus() {
-  progressLabel.textContent = `${foundWords.length} / ${puzzle.words.length} words found`;
+  const wordsOnly = foundWords.filter(f => !f.isSpangram);
+  progressLabel.textContent = `${wordsOnly.length} / ${puzzle.words.length} words found`;
   spangramLabel.textContent = spangramFound ? 'Spangram found ✓' : 'Spangram hidden';
 
   foundListEl.innerHTML = '';
-  foundWords.forEach(w => {
+  foundWords.forEach(entry => {
     const chip = document.createElement('span');
     chip.className = 'found-chip tamil';
-    chip.textContent = w;
+    chip.textContent = entry.word;
+    chip.title = 'Tap for meaning';
+    chip.addEventListener('click', () => {
+      showToast(entry.word, entry.isSpangram ? `${entry.meaning} · spangram` : entry.meaning);
+    });
     foundListEl.appendChild(chip);
   });
 }
 
 function checkWin() {
-  if (spangramFound && foundWords.length === puzzle.words.length) {
+  if (spangramFound && foundWords.filter(f => !f.isSpangram).length === puzzle.words.length) {
     setTimeout(() => winBackdrop.classList.add('show'), 400);
   }
 }
@@ -763,10 +809,9 @@ document.getElementById('playAgainBtn').addEventListener('click', () => {
   startPuzzle(nextIndex);
 });
 document.getElementById('revealBtn').addEventListener('click', () => {
-  const remaining = puzzle.words.filter(w => !foundWords.includes(w));
+  const remaining = puzzle.words.filter(w => !foundWords.some(f => f.word === w.word));
   if (remaining.length === 0) return;
-  const word = remaining[0];
-  const units = splitGraphemes(word);
+  const word = remaining[0].word;
   // find that word's cells in the grid and flash the first letter
   for (let r = 0; r < puzzle.gridSize.rows; r++) {
     for (let c = 0; c < puzzle.gridSize.cols; c++) {
@@ -779,7 +824,6 @@ document.getElementById('revealBtn').addEventListener('click', () => {
     }
   }
 });
-baminiCheck.addEventListener('change', renderGrid);
 window.addEventListener('resize', drawThread);
 
 /* ---------- Boot ---------- */
