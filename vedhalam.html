@@ -10,16 +10,52 @@
 <style>
   html, body { margin: 0; padding: 0; background: #070a10; }
   #root { min-height: 100vh; }
+  #load-error {
+    display: none; position: fixed; inset: 0; z-index: 9999; background: #1a0303; color: #f2a89f;
+    font-family: monospace; padding: 24px; box-sizing: border-box; white-space: pre-wrap; line-height: 1.6;
+    font-size: 14px;
+  }
 </style>
 </head>
 <body>
 <div id="root"></div>
+<div id="load-error"></div>
 
-<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script>
+  // Visible fallback: if a CDN script fails or the app throws after loading,
+  // show a readable message on the page instead of a silent black screen.
+  window.__loadErrors = [];
+  function reportLoadError(label) {
+    window.__loadErrors.push(label + " failed to load (blocked by network/ad-blocker, or the CDN is down).");
+    showLoadErrors();
+  }
+  function showLoadErrors() {
+    var el = document.getElementById("load-error");
+    if (window.__loadErrors.length === 0) return;
+    el.style.display = "block";
+    el.textContent = "விக்ரம் வேதாள் could not start:\n\n" + window.__loadErrors.join("\n") +
+      "\n\nTry: disabling any ad-blocker/script-blocker for this page, checking your network connection, or opening this file on a different network.";
+  }
+  window.addEventListener("error", function (e) {
+    if (window.__appStarted) return; // don't double-report unrelated later errors
+    window.__loadErrors.push("Script error: " + (e.message || "unknown error"));
+    showLoadErrors();
+  });
+</script>
 
-<script type="text/babel" data-presets="react">
+<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" onerror="reportLoadError('React')"></script>
+<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" onerror="reportLoadError('ReactDOM')"></script>
+<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.26.4/babel.min.js" onerror="reportLoadError('Babel')"></script>
+
+<!--
+  This block holds the raw JSX source as plain text (type="text/plain" so
+  Babel's own auto-scanner ignores it). The script right below reads it,
+  transforms it manually with the classic JSX runtime forced on, and runs
+  the result. Forcing "classic" avoids Babel defaulting to the "automatic"
+  runtime, which injects an ES `import` statement that a plain (non-module)
+  script tag cannot execute.
+-->
+<script type="text/plain" id="app-source">
 const { useState, useEffect, useRef, useCallback } = React;
 
 /* ============================================================
@@ -1101,7 +1137,31 @@ function QuestionModal({ story, options, timeLeft, onAnswer }) {
 
 const rootEl = document.getElementById("root");
 const root = ReactDOM.createRoot(rootEl);
-root.render(<VikramVedhaTamil />);
+root.render(React.createElement(VikramVedhaTamil));
+</script>
+
+<script>
+(function () {
+  try {
+    if (typeof Babel === "undefined") {
+      reportLoadError("Babel");
+      return;
+    }
+    if (typeof React === "undefined" || typeof ReactDOM === "undefined") {
+      reportLoadError(typeof React === "undefined" ? "React" : "ReactDOM");
+      return;
+    }
+    var src = document.getElementById("app-source").textContent;
+    var out = Babel.transform(src, { presets: [["react", { runtime: "classic" }]] }).code;
+    var run = new Function("React", "ReactDOM", out);
+    run(React, ReactDOM);
+    window.__appStarted = true;
+  } catch (e) {
+    window.__loadErrors.push("Startup error: " + e.message);
+    showLoadErrors();
+    console.error(e);
+  }
+})();
 </script>
 </body>
 </html>
