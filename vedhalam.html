@@ -1,0 +1,1078 @@
+import React, { useState, useEffect, useRef, useCallback } from "react";
+
+/* ============================================================
+   விக்ரம் வேதாள் — "Find Vedha"
+   A hide-and-seek game teaching Tamil words tied to medieval
+   Tamil Nadu locations. Vedha hints at his hiding spot with a
+   template sentence + a location word. Find him before the
+   lamp burns out, then he tells a short kadhai (story) — answer
+   his question about it correctly to defeat him and move on.
+   ============================================================ */
+
+/* ---------------- Locations ---------------- */
+const LOCATIONS = [
+  { id: "forest", tamil: "காடு", translit: "kaadu", english: "Forest", accent: "#3f7a4d", accent2: "#1c3320" },
+  { id: "palace", tamil: "அரண்மனை", translit: "aranmanai", english: "Palace", accent: "#b3862f", accent2: "#3a2a10" },
+  { id: "teashop", tamil: "தேநீர்க் கடை", translit: "thenneerk kadai", english: "Tea Shop", accent: "#a05a2c", accent2: "#3a2013" },
+  { id: "bedroom", tamil: "படுக்கையறை", translit: "padukkaiyarai", english: "Bedroom", accent: "#4a5aa0", accent2: "#171d38" },
+  { id: "market", tamil: "சந்தை", translit: "santhai", english: "Market", accent: "#b08a20", accent2: "#33280c" },
+  { id: "temple", tamil: "கோவில்", translit: "kovil", english: "Temple", accent: "#a5333f", accent2: "#331014" },
+  { id: "well", tamil: "கிணறு", translit: "kinaru", english: "Well", accent: "#3a8a95", accent2: "#12313a" },
+  { id: "kalari", tamil: "களரி", translit: "kalari", english: "Training Arena", accent: "#7a3a2a", accent2: "#2a120c" },
+  { id: "forge", tamil: "கொல்லன் பட்டறை", translit: "kollan pattarai", english: "Blacksmith's Forge", accent: "#8a4a1a", accent2: "#2e1808" },
+  { id: "harbor", tamil: "துறைமுகம்", translit: "thuraimugam", english: "Harbor", accent: "#2a5a7a", accent2: "#0e2230" },
+  { id: "school", tamil: "பள்ளிக்கூடம்", translit: "pallikoodam", english: "School", accent: "#6a7a3a", accent2: "#232c10" },
+  { id: "garden", tamil: "தோட்டம்", translit: "thottam", english: "Garden", accent: "#4a8a4a", accent2: "#163018" },
+];
+
+/* ---------------- Hint clues ----------------
+   Each clue = a full sentence Vedha "calls out". Some clues fit
+   more than one location on purpose — the player must reason
+   about which room actually matches, or check candidates. */
+const CLUES = [
+  // original six locations
+  { template: "எனக்கு", templateTranslit: "Enakku", word: "பசிக்குது", translit: "pasikkudhu", meaning: "I'm hungry", locations: ["teashop", "palace"] },
+  { template: "நான்", templateTranslit: "Naan", word: "தூங்குறேன்", translit: "thoonguren", meaning: "I'm sleeping", locations: ["bedroom"] },
+  { template: "இங்கே ஒரு", templateTranslit: "Inge oru", word: "மரம்", translit: "maram", meaning: "a tree", locations: ["forest"] },
+  { template: "இங்கே ஒரு", templateTranslit: "Inge oru", word: "அரியணை", translit: "ariyanai", meaning: "a throne", locations: ["palace"] },
+  { template: "எனக்கு", templateTranslit: "Enakku", word: "பயமா இருக்கு", translit: "payamaa irukku", meaning: "I'm scared", locations: ["forest", "temple"] },
+  { template: "நான்", templateTranslit: "Naan", word: "வேட்டையாடுறேன்", translit: "vettaiyaaduren", meaning: "I'm hunting", locations: ["forest"] },
+  { template: "நான்", templateTranslit: "Naan", word: "வழிபாடு செய்யுறேன்", translit: "vazhipaadu seiyren", meaning: "I'm praying", locations: ["temple"] },
+  { template: "இங்கே ஒரு", templateTranslit: "Inge oru", word: "மணி", translit: "mani", meaning: "a bell", locations: ["temple", "palace"] },
+  { template: "நான்", templateTranslit: "Naan", word: "பேரம் பேசுறேன்", translit: "peram pesuren", meaning: "I'm bargaining", locations: ["market"] },
+  { template: "இங்கே ஒரு", templateTranslit: "Inge oru", word: "காய்கறி", translit: "kaaikari", meaning: "a vegetable", locations: ["market"] },
+  { template: "எனக்கு", templateTranslit: "Enakku", word: "கனவு வருது", translit: "kanavu varudhu", meaning: "I'm dreaming", locations: ["bedroom"] },
+  { template: "நான்", templateTranslit: "Naan", word: "தேநீர் குடிக்குறேன்", translit: "thaneer kudikkuren", meaning: "I'm drinking tea", locations: ["teashop"] },
+  { template: "இங்கே ஒரு", templateTranslit: "Inge oru", word: "கிரீடம்", translit: "kireedam", meaning: "a crown", locations: ["palace"] },
+  { template: "எனக்கு", templateTranslit: "Enakku", word: "சந்தோஷமா இருக்கு", translit: "santhoshamaa irukku", meaning: "I'm happy", locations: ["teashop", "market", "palace"] },
+  // more variety on the original six
+  { template: "இங்கே ஒரு", templateTranslit: "Inge oru", word: "பாறை", translit: "paarai", meaning: "a rock", locations: ["forest"] },
+  { template: "நான்", templateTranslit: "Naan", word: "நியாயம் தீர்க்குறேன்", translit: "niyaayam theerkuren", meaning: "I'm giving judgment", locations: ["palace"] },
+  { template: "இங்கே ஒரு", templateTranslit: "Inge oru", word: "கோப்பை", translit: "koppai", meaning: "a cup", locations: ["teashop", "palace"] },
+  { template: "இங்கே ஒரு", templateTranslit: "Inge oru", word: "விளக்கு", translit: "vilakku", meaning: "a lamp", locations: ["bedroom", "temple"] },
+  { template: "நான்", templateTranslit: "Naan", word: "நாணயம் எண்ணுறேன்", translit: "naanayam ennuren", meaning: "I'm counting coins", locations: ["market"] },
+  { template: "இங்கே ஒரு", templateTranslit: "Inge oru", word: "சிலை", translit: "silai", meaning: "a statue", locations: ["temple"] },
+  { template: "எனக்கு", templateTranslit: "Enakku", word: "களைப்பா இருக்கு", translit: "kalaippaa irukku", meaning: "I'm tired", locations: ["bedroom", "kalari", "harbor"] },
+  { template: "நான்", templateTranslit: "Naan", word: "பாட்டு பாடுறேன்", translit: "paattu paaduren", meaning: "I'm singing", locations: ["temple", "garden", "palace"] },
+  { template: "இங்கே ஒரு", templateTranslit: "Inge oru", word: "வாளி", translit: "vaali", meaning: "a bucket", locations: ["well", "teashop"] },
+  // new locations
+  { template: "நான்", templateTranslit: "Naan", word: "தண்ணீர் இறைக்குறேன்", translit: "thanneer iraikkuren", meaning: "I'm drawing water", locations: ["well"] },
+  { template: "இங்கே ஒரு", templateTranslit: "Inge oru", word: "கயிறு", translit: "kayiru", meaning: "a rope", locations: ["well"] },
+  { template: "நான்", templateTranslit: "Naan", word: "பயிற்சி செய்யுறேன்", translit: "payirchi seiyren", meaning: "I'm practicing", locations: ["kalari"] },
+  { template: "இங்கே ஒரு", templateTranslit: "Inge oru", word: "கேடயம்", translit: "kedayam", meaning: "a shield", locations: ["kalari", "palace"] },
+  { template: "நான்", templateTranslit: "Naan", word: "இரும்பு அடிக்குறேன்", translit: "irumbu adikkuren", meaning: "I'm hammering iron", locations: ["forge"] },
+  { template: "இங்கே ஒரு", templateTranslit: "Inge oru", word: "சம்மட்டி", translit: "sammatti", meaning: "a hammer", locations: ["forge", "kalari"] },
+  { template: "நான்", templateTranslit: "Naan", word: "படகு ஓட்டுறேன்", translit: "padagu otturen", meaning: "I'm rowing a boat", locations: ["harbor"] },
+  { template: "இங்கே ஒரு", templateTranslit: "Inge oru", word: "கப்பல்", translit: "kappal", meaning: "a ship", locations: ["harbor", "market"] },
+  { template: "நான்", templateTranslit: "Naan", word: "படிக்குறேன்", translit: "padikkuren", meaning: "I'm studying", locations: ["school", "palace"] },
+  { template: "இங்கே ஒரு", templateTranslit: "Inge oru", word: "ஓலைச்சுவடி", translit: "olaichuvadi", meaning: "a palm-leaf manuscript", locations: ["school", "temple"] },
+  { template: "நான்", templateTranslit: "Naan", word: "பூக்கள் பறிக்குறேன்", translit: "pookkal parikkuren", meaning: "I'm picking flowers", locations: ["garden", "market"] },
+  { template: "இங்கே ஒரு", templateTranslit: "Inge oru", word: "பூ", translit: "poo", meaning: "a flower", locations: ["garden", "temple"] },
+];
+
+/* ---------------- Kadhai (story riddles) ----------------
+   2 original vignettes per location. One is picked at random
+   each time Vedha is captured there, so the same location
+   doesn't always play out the same way. Each ends in a
+   comprehension question — answer it to defeat him. */
+const STORIES = {
+  forest: [
+    {
+      tamil: "ஒரு வேடன் காட்டில் வேட்டையாடிக் கொண்டிருந்தான். திடீரென்று ஒரு புலி அவனை நோக்கி வந்தது. வேடன் பயப்படாமல் தன் அம்பை எடுத்தான்.",
+      translit: "Oru vedan kaattil vettaiyaadikondirundhaan. Thideerendru oru puli avanai nokki vandhadhu. Vedan payappadaamal than ambai edudhaan.",
+      english: "A hunter was hunting in the forest. Suddenly a tiger came toward him. The hunter, without fear, picked up his arrow.",
+      question: "வேடனை நோக்கி என்ன வந்தது?",
+      questionEnglish: "What came toward the hunter?",
+      correctAnswer: "புலி (Tiger)",
+      wrongAnswers: ["யானை (Elephant)", "மான் (Deer)", "பாம்பு (Snake)"],
+    },
+    {
+      tamil: "இரண்டு குழந்தைகள் காட்டில் வழி தவறினர். ஒரு முதிய மரம் அவர்களுக்கு வழி காட்டியது போல் தோன்றியது. அவர்கள் நிலவின் ஒளியில் வீடு திரும்பினர்.",
+      translit: "Irandu kuzhandhaikal kaattil vazhi thavarinar. Oru mudhiya maram avargalukku vazhi kaatiyadhu pol thondriyadhu. Avargal nilavin oliyil veedu thirumbinar.",
+      english: "Two children lost their way in the forest. An old tree seemed to show them the path. They returned home in the moonlight.",
+      question: "குழந்தைகளுக்கு எது வழி காட்டியது போல் தோன்றியது?",
+      questionEnglish: "What seemed to show the children the way?",
+      correctAnswer: "மரம் (Tree)",
+      wrongAnswers: ["நதி (River)", "பறவை (Bird)", "நட்சத்திரம் (Star)"],
+    },
+  ],
+  palace: [
+    {
+      tamil: "மன்னன் தன் அரியணையில் அமர்ந்திருந்தான். ஒரு அமைச்சர் விரைந்து வந்து ஒரு முக்கியமான செய்தியைச் சொன்னார். மன்னன் உடனே ஆணை பிறப்பித்தான்.",
+      translit: "Mannan than ariyanaiyil amarndhirundhaan. Oru amaichar viraindhu vandhu oru mukkiyamaana seidhiyaic sonnaar. Mannan udane aanai piraibiththaan.",
+      english: "The king sat on his throne. A minister rushed in and gave an important message. The king immediately issued an order.",
+      question: "மன்னன் எதன் மேல் அமர்ந்திருந்தான்?",
+      questionEnglish: "What did the king sit on?",
+      correctAnswer: "அரியணை (Throne)",
+      wrongAnswers: ["படுக்கை (Bed)", "நாற்காலி (Chair)", "தரை (Floor)"],
+    },
+    {
+      tamil: "இளவரசன் தன் தந்தையிடம் நீதி கேட்டு வந்தான். மன்னன் பொறுமையாகக் கேட்டு நியாயமான தீர்ப்பு அளித்தான். அனைவரும் மன்னனைப் புகழ்ந்தனர்.",
+      translit: "Ilavarasan than thandhaiyidam needhi kettu vandhaan. Mannan poRumaiyaaga kettu niyaayamaana theerppu alitthaan. Anaivarum mannanaip pugazhndhanar.",
+      english: "The prince came to his father seeking justice. The king listened patiently and gave a fair judgment. Everyone praised the king.",
+      question: "மன்னன் என்ன அளித்தான்?",
+      questionEnglish: "What did the king give?",
+      correctAnswer: "நியாயமான தீர்ப்பு (A fair judgment)",
+      wrongAnswers: ["ஒரு பரிசு (A gift)", "ஒரு விருந்து (A feast)", "ஒரு கடிதம் (A letter)"],
+    },
+  ],
+  teashop: [
+    {
+      tamil: "ஒரு வழிப்போக்கன் தேநீர்க் கடைக்குள் நுழைந்தான். அவனுக்கு மிகவும் பசியாக இருந்தது. கடைக்காரர் சூடான தேநீரும் இனிப்பும் கொடுத்தார்.",
+      translit: "Oru vazhippokkan thenneer kadaikkul nuzhaindhaan. Avanukku migavum pasiyaaga irundhadhu. Kadaikaarar soodaana thaneerum inippum kodutthaar.",
+      english: "A traveler entered the tea shop. He was very hungry. The shopkeeper gave him hot tea and a sweet.",
+      question: "கடைக்காரர் என்ன கொடுத்தார்?",
+      questionEnglish: "What did the shopkeeper give?",
+      correctAnswer: "தேநீரும் இனிப்பும் (Tea & sweet)",
+      wrongAnswers: ["சாதமும் குழம்பும் (Rice & curry)", "பழமும் தண்ணீரும் (Fruit & water)", "பால் மட்டும் (Only milk)"],
+    },
+    {
+      tamil: "தேநீர்க் கடையில் இரண்டு நண்பர்கள் சிரித்துப் பேசிக்கொண்டிருந்தனர். திடீரென்று மழை பெய்யத் தொடங்கியது. அவர்கள் கடையிலேயே தங்கி தேநீர் அருந்தினர்.",
+      translit: "Thenneerk kadaiyil irandu nanbargal siriththup pesikkondirundhanar. Thideerendru mazhai peiyath thodangiyadhu. Avargal kadaiyileye thangi thenீர் arundhinar.",
+      english: "Two friends were laughing and chatting in the tea shop. Suddenly it began to rain. They stayed in the shop and drank tea.",
+      question: "தேநீர்க் கடையில் இருந்தபோது என்ன நடந்தது?",
+      questionEnglish: "What happened while they were in the tea shop?",
+      correctAnswer: "மழை பெய்தது (It rained)",
+      wrongAnswers: ["இடி முழங்கியது (Thunder roared)", "காற்று வீசியது (Wind blew)", "வெயில் அடித்தது (The sun shone)"],
+    },
+  ],
+  bedroom: [
+    {
+      tamil: "இளவரசி படுக்கையில் படுத்திருந்தாள். அவளுக்கு ஒரு விசித்திரமான கனவு வந்தது. கனவில் ஒரு தங்க மான் அவளை அழைத்தது.",
+      translit: "Ilavarasi padukkaiyil paduthirundhaal. Avalukku oru vichithiramaana kanavu vandhadhu. Kanavil oru thanga maan avalai azhaiththadhu.",
+      english: "The princess lay in bed. She had a strange dream. In the dream, a golden deer called her.",
+      question: "கனவில் என்ன வந்தது?",
+      questionEnglish: "What appeared in the dream?",
+      correctAnswer: "தங்க மான் (Golden deer)",
+      wrongAnswers: ["வெள்ளி புலி (Silver tiger)", "பறவை (Bird)", "ராட்சசன் (Demon)"],
+    },
+    {
+      tamil: "ஒரு சிறுவன் இரவில் தூங்க முடியாமல் இருந்தான். அவனது பாட்டி அவனுக்கு ஒரு பழைய கதை சொன்னாள். கதை முடிந்தவுடன் அவன் அமைதியாகத் தூங்கினான்.",
+      translit: "Oru siruvan iravil thoonga mudiyaamal irundhaan. Avanadhu paatti avanukku oru pazhaiya kadhai sonnaal. Kadhai mudindhavudan avan amaidhiyaaga thoonginaan.",
+      english: "A boy couldn't sleep at night. His grandmother told him an old story. Once the story ended, he slept peacefully.",
+      question: "சிறுவனுக்கு யார் கதை சொன்னார்கள்?",
+      questionEnglish: "Who told the boy a story?",
+      correctAnswer: "பாட்டி (Grandmother)",
+      wrongAnswers: ["தாத்தா (Grandfather)", "அம்மா (Mother)", "தோழன் (Friend)"],
+    },
+  ],
+  market: [
+    {
+      tamil: "சந்தையில் ஒரு விவசாயி காய்கறி விற்றுக் கொண்டிருந்தான். ஒரு பெண் வந்து விலையைப் பற்றிப் பேரம் பேசினாள். இருவரும் நியாயமான விலைக்கு ஒப்புக்கொண்டனர்.",
+      translit: "Santhaiyil oru vivasaayi kaaikari vitrukondirundhaan. Oru penn vandhu vilaiyaip patri peram pesinaal. Iruvarum niyaayamaana vilaikku oppukkondanar.",
+      english: "In the market, a farmer was selling vegetables. A woman came and bargained about the price. Both agreed on a fair price.",
+      question: "விவசாயி என்ன விற்றுக் கொண்டிருந்தான்?",
+      questionEnglish: "What was the farmer selling?",
+      correctAnswer: "காய்கறி (Vegetables)",
+      wrongAnswers: ["பூக்கள் (Flowers)", "துணி (Cloth)", "நகைகள் (Jewelry)"],
+    },
+    {
+      tamil: "சந்தையில் ஒரு குயவன் மட்பாண்டங்களை அடுக்கி வைத்தான். ஒரு குழந்தை ஓடி வந்து ஒரு சிறிய பானையை உடைத்துவிட்டது. குயவன் கோபப்படாமல் புன்னகைத்தான்.",
+      translit: "Santhaiyil oru kuyavan matpaandangalai adukki vaiththaan. Oru kuzhandhai odi vandhu oru siriya paanaiyai udaiththuvittadhu. Kuyavan kobappadaamal punnagaiththaan.",
+      english: "A potter arranged clay pots in the market. A child ran and broke a small pot. The potter didn't get angry — he just smiled.",
+      question: "குழந்தை என்ன உடைத்தது?",
+      questionEnglish: "What did the child break?",
+      correctAnswer: "பானை (A pot)",
+      wrongAnswers: ["கண்ணாடி (A mirror)", "பெட்டி (A box)", "விளக்கு (A lamp)"],
+    },
+  ],
+  temple: [
+    {
+      tamil: "கோவிலில் மணி அடித்தது. பக்தர்கள் இறைவனை வழிபட்டனர். ஒரு குழந்தை தீபம் ஏற்றி மகிழ்ச்சியடைந்தது.",
+      translit: "Kovilil mani adiththadhu. Bhaktharkal iraivanai vazhipattanar. Oru kuzhandhai theepam yetri magizhchiyadaindhadhu.",
+      english: "The temple bell rang. Devotees worshipped the god. A child lit a lamp and became joyful.",
+      question: "குழந்தை என்ன ஏற்றியது?",
+      questionEnglish: "What did the child light?",
+      correctAnswer: "தீபம் (Lamp)",
+      wrongAnswers: ["மெழுகுவர்த்தி (Candle)", "நெருப்பு (Fire)", "விளக்கு எண்ணெய் (Lamp oil)"],
+    },
+    {
+      tamil: "ஒரு யானை கோவிலின் வாசலில் நின்றது. குருக்கள் அதற்கு வாழைப்பழம் கொடுத்தார். பக்தர்கள் யானையைத் தொட்டு ஆசி பெற்றனர்.",
+      translit: "Oru yaanai kovilin vaasalil nindradhu. Kurukkal adharku vaazhaipazham koduthaar. Bhaktharkal yaanaiyai thottu aasi petranar.",
+      english: "An elephant stood at the temple entrance. The priest gave it a banana. Devotees touched the elephant and received blessings.",
+      question: "குருக்கள் யானைக்கு என்ன கொடுத்தார்?",
+      questionEnglish: "What did the priest give the elephant?",
+      correctAnswer: "வாழைப்பழம் (Banana)",
+      wrongAnswers: ["தேங்காய் (Coconut)", "அரிசி (Rice)", "பூக்கள் (Flowers)"],
+    },
+  ],
+  well: [
+    {
+      tamil: "ஒரு பெண் கிணற்றில் இருந்து தண்ணீர் இறைத்தாள். அவளது வாளி கயிறு அறுந்து கிணற்றுக்குள் விழுந்தது. அருகில் இருந்த ஒருவர் அவளுக்கு உதவினார்.",
+      translit: "Oru penn kinatril irundhu thanneer iraiththaal. Avaladhu vaali kayiru arundhu kinatrukkul vizhundhadhu. Arugil irundha oruvar avalukku udhaviyaar.",
+      english: "A woman was drawing water from the well. Her bucket's rope snapped and it fell into the well. Someone nearby helped her.",
+      question: "என்ன கிணற்றுக்குள் விழுந்தது?",
+      questionEnglish: "What fell into the well?",
+      correctAnswer: "வாளி (Bucket)",
+      wrongAnswers: ["கயிறு மட்டும் (Only the rope)", "ஒரு நாணயம் (A coin)", "ஒரு பானை (A pot)"],
+    },
+    {
+      tamil: "கிராமத்து மக்கள் மாலை நேரத்தில் கிணற்றடியில் கூடினர். அவர்கள் தண்ணீர் இறைத்துக் கொண்டே செய்திகளைப் பகிர்ந்தனர். சிறுவர்கள் கிணற்றைச் சுற்றி விளையாடினர்.",
+      translit: "Kiraamathu makkal maalai neratthil kinatradiyil koodinar. Avargal thanneer iraiththukonde seidhigalaip pagirndhanar. Siruvargal kinatraich chutri vilaiyaadinar.",
+      english: "The village people gathered near the well in the evening. As they drew water, they shared news with one another. Children played around the well.",
+      question: "மக்கள் மாலை நேரத்தில் எங்கே கூடினர்?",
+      questionEnglish: "Where did the people gather in the evening?",
+      correctAnswer: "கிணற்றடியில் (Near the well)",
+      wrongAnswers: ["சந்தையில் (In the market)", "கோவிலில் (In the temple)", "காட்டில் (In the forest)"],
+    },
+  ],
+  kalari: [
+    {
+      tamil: "ஒரு இளைஞன் களரியில் வாள் பயிற்சி செய்தான். அவனது ஆசான் அவனுக்கு புதிய நுட்பம் கற்றுக் கொடுத்தார். இளைஞன் விடாமுயற்சியுடன் பயிற்சி செய்தான்.",
+      translit: "Oru ilaignan kalariyil vaal payirchi seidhaan. Avanadhu aasaan avanukku pudhiya nutpam katruk kodutthaar. Ilaignan vidaamuyarchiyudan payirchi seidhaan.",
+      english: "A young man practiced swordplay at the training arena. His teacher taught him a new technique. The young man practiced with great determination.",
+      question: "இளைஞன் என்ன பயிற்சி செய்தான்?",
+      questionEnglish: "What did the young man practice?",
+      correctAnswer: "வாள் பயிற்சி (Swordplay)",
+      wrongAnswers: ["குதிரை ஓட்டம் (Horse riding)", "நீச்சல் (Swimming)", "வில் எய்யுதல் (Archery)"],
+    },
+    {
+      tamil: "இரு போட்டியாளர்கள் களரியில் மோதினர். கூட்டம் ஆரவாரத்துடன் பார்த்துக் கொண்டிருந்தது. இறுதியில் இருவரும் ஒருவரையொருவர் மரியாதையுடன் வணங்கினர்.",
+      translit: "Iru pottiyaalargal kalariyil modhinar. Kootam aaravaaraththudan paarthukondirundhadhu. Irudhiyil iruvarum oruvaraiyoruvar mariyaadaiyudan vanaginar.",
+      english: "Two competitors fought at the training arena. The crowd watched with excitement. In the end, both bowed to each other with respect.",
+      question: "போட்டியின் முடிவில் என்ன நடந்தது?",
+      questionEnglish: "What happened at the end of the match?",
+      correctAnswer: "இருவரும் வணங்கினர் (Both bowed)",
+      wrongAnswers: ["ஒருவர் ஓடிவிட்டார் (One ran away)", "கூட்டம் கலைந்தது (The crowd left)", "மழை பெய்தது (It rained)"],
+    },
+  ],
+  forge: [
+    {
+      tamil: "கொல்லன் சூடான இரும்பை அடித்து வடிவமைத்தான். தீப்பொறிகள் நான்கு பக்கமும் பறந்தன. அவன் ஒரு அழகான வாளை உருவாக்கினான்.",
+      translit: "Kollan soodaana irumbai adiththu vadivamaithaan. Theepporigal naangu pakkamum parandhana. Avan azhagaana vaalai uruvaakinaan.",
+      english: "The blacksmith hammered the hot iron into shape. Sparks flew in all four directions. He created a beautiful sword.",
+      question: "கொல்லன் என்ன உருவாக்கினான்?",
+      questionEnglish: "What did the blacksmith create?",
+      correctAnswer: "வாள் (A sword)",
+      wrongAnswers: ["மணி (A bell)", "பானை (A pot)", "தேர் (A chariot)"],
+    },
+    {
+      tamil: "ஒரு சிறுவன் கொல்லன் பட்டறையைப் பார்க்க வந்தான். கொல்லன் அவனுக்கு சம்மட்டியால் இரும்பு அடிக்கும் விதத்தைக் காட்டினார். சிறுவன் ஆச்சரியத்துடன் பார்த்தான்.",
+      translit: "Oru siruvan kollan pattaraiyaip paarkka vandhaan. Kollan avanukku sammattiyaal irumbu adikkum vidhaththaik kaattinaar. Siruvan aachariyathudan paarthaan.",
+      english: "A boy came to see the blacksmith's forge. The blacksmith showed him how to hammer iron with a hammer. The boy watched with amazement.",
+      question: "கொல்லன் எதனால் இரும்பை அடித்தார்?",
+      questionEnglish: "What did the blacksmith use to hammer the iron?",
+      correctAnswer: "சம்மட்டி (Hammer)",
+      wrongAnswers: ["கத்தி (Knife)", "கல் (Stone)", "மரக்கட்டை (A log)"],
+    },
+  ],
+  harbor: [
+    {
+      tamil: "ஒரு மீனவன் காலையில் படகில் கடலுக்குச் சென்றான். மாலையில் அவன் நிறைய மீன்களுடன் திரும்பினான். கிராமத்தினர் மகிழ்ச்சியுடன் அவனை வரவேற்றனர்.",
+      translit: "Oru meenavan kaalaiyil padagil kadalukkuch chendraan. Maalaiyil avan niraiya meengaludan thirumbinaan. Kiraamaththinar magizhchiyudan avanai varaverranar.",
+      english: "A fisherman went out to sea in his boat in the morning. In the evening, he returned with many fish. The villagers welcomed him joyfully.",
+      question: "மீனவன் மாலையில் என்னுடன் திரும்பினான்?",
+      questionEnglish: "What did the fisherman return with in the evening?",
+      correctAnswer: "நிறைய மீன்கள் (Many fish)",
+      wrongAnswers: ["வெறும் கைகளுடன் (Empty-handed)", "ஒரு பெரிய கப்பலுடன் (A big ship)", "முத்துக்களுடன் (Pearls)"],
+    },
+    {
+      tamil: "ஒரு பெரிய கப்பல் துறைமுகத்தில் வந்து நின்றது. வணிகர்கள் தூரதேசப் பொருட்களை இறக்கினர். துறைமுகம் முழுவதும் ஆரவாரமாக இருந்தது.",
+      translit: "Oru periya kappal thuraimugaththil vandhu nindradhu. Vanigargal thooradhesap poruTgalai irakkinar. Thuraimugam muzhuvadhum aaravaaramaaga irundhadhu.",
+      english: "A big ship arrived at the harbor. Merchants unloaded goods from far-off lands. The whole harbor was bustling with noise.",
+      question: "வணிகர்கள் என்ன இறக்கினர்?",
+      questionEnglish: "What did the merchants unload?",
+      correctAnswer: "தூரதேசப் பொருட்கள் (Goods from far-off lands)",
+      wrongAnswers: ["வெற்று பெட்டிகள் (Empty boxes)", "படகுகள் (Boats)", "மீன்கள் (Fish)"],
+    },
+  ],
+  school: [
+    {
+      tamil: "குருகுலத்தில் மாணவர்கள் ஓலைச்சுவடியில் எழுதப் பயின்றனர். ஆசிரியர் அவர்களுக்கு பழைய கதைகள் சொன்னார். மாணவர்கள் கவனமாகக் கேட்டனர்.",
+      translit: "Kurukulaththil maanavargal olaichuvadiyil ezhuthap payindranar. Aasiriyar avargalukku pazhaiya kadhaigal sonnaar. Maanavargal kavanamaaga kettanar.",
+      english: "Students at the gurukulam practiced writing on palm-leaf manuscripts. The teacher told them old stories. The students listened carefully.",
+      question: "மாணவர்கள் எதில் எழுதப் பயின்றனர்?",
+      questionEnglish: "What did the students practice writing on?",
+      correctAnswer: "ஓலைச்சுவடி (Palm-leaf manuscript)",
+      wrongAnswers: ["கல் பலகை (Stone slab)", "துணி (Cloth)", "மணல் (Sand)"],
+    },
+    {
+      tamil: "ஒரு மாணவன் கணக்கு கற்க சிரமப்பட்டான். அவனது நண்பன் பொறுமையாக அவனுக்கு விளக்கினான். இருவரும் இணைந்து படித்து வெற்றி பெற்றனர்.",
+      translit: "Oru maanavan kanakku katka siramappattaan. Avanadhu nanban poRumaiyaaga avanukku vilakkinaan. Iruvarum inaindhu padiththu vetri petranar.",
+      english: "A student found it hard to learn math. His friend patiently explained it to him. Together, they studied and succeeded.",
+      question: "மாணவனுக்கு எது கற்க சிரமமாக இருந்தது?",
+      questionEnglish: "What did the student find hard to learn?",
+      correctAnswer: "கணக்கு (Math)",
+      wrongAnswers: ["இசை (Music)", "ஓவியம் (Painting)", "நடனம் (Dance)"],
+    },
+  ],
+  garden: [
+    {
+      tamil: "அரண்மனைத் தோட்டத்தில் பலவிதமான பூக்கள் மலர்ந்திருந்தன. ஒரு தேனீ ஒவ்வொரு பூவிலும் அமர்ந்து தேன் சேகரித்தது. இளவரசி தோட்டத்தில் நடந்து மகிழ்ந்தாள்.",
+      translit: "Aranmanaith thottaththil palavidhamaana pookkal malarndhirundhana. Oru thenee ovvoru pooviluml amarndhu thean segariththadhu. Ilavarasi thottaththil nadandhu magizhndhaal.",
+      english: "Many kinds of flowers bloomed in the palace garden. A bee landed on each flower and gathered honey. The princess walked through the garden happily.",
+      question: "தேனீ என்ன சேகரித்தது?",
+      questionEnglish: "What did the bee gather?",
+      correctAnswer: "தேன் (Honey)",
+      wrongAnswers: ["தண்ணீர் (Water)", "இலைகள் (Leaves)", "மணல் (Sand)"],
+    },
+    {
+      tamil: "ஒரு தோட்டக்காரன் தினமும் காலையில் செடிகளுக்கு நீர் ஊற்றினான். ஒரு நாள் ஒரு அரிய மலர் பூத்தது. அனைவரும் அதைப் பார்க்க வந்தனர்.",
+      translit: "Oru thottakkaaran thinamum kaalaiyil sedigalukku neer ootrinaan. Oru naal oru ariya malar poothadhu. Anaivarum adhaip paarkka vandhanar.",
+      english: "A gardener watered the plants every morning. One day, a rare flower bloomed. Everyone came to see it.",
+      question: "தோட்டக்காரன் தினமும் என்ன செய்தான்?",
+      questionEnglish: "What did the gardener do every day?",
+      correctAnswer: "செடிகளுக்கு நீர் ஊற்றினான் (Watered the plants)",
+      wrongAnswers: ["பூக்களை விற்றான் (Sold flowers)", "மரம் வெட்டினான் (Cut trees)", "பாடல் பாடினான் (Sang songs)"],
+    },
+  ],
+};
+
+/* ---------------- Difficulty ---------------- */
+const ROUNDS_PER_NIGHT = 3;
+const DRAIN_BASE = 3.2;
+const DRAIN_PER_NIGHT = 0.9;
+const WRONG_PENALTY = 9;
+const QUESTION_TIME = 16;
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function pickClue(locId, night) {
+  const matches = CLUES.filter((c) => c.locations.includes(locId));
+  const ambiguous = matches.filter((c) => c.locations.length > 1);
+  const unambiguous = matches.filter((c) => c.locations.length === 1);
+  const ambiguousChance = Math.min(0.85, 0.2 + night * 0.2);
+  let pool;
+  if (ambiguous.length && Math.random() < ambiguousChance) pool = ambiguous;
+  else if (unambiguous.length) pool = unambiguous;
+  else pool = matches;
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
+function pickStory(locId) {
+  const arr = STORIES[locId];
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function buildQuestionOptions(story) {
+  const options = shuffle([story.correctAnswer, ...story.wrongAnswers]);
+  const correctIndex = options.indexOf(story.correctAnswer);
+  return { options, correctIndex };
+}
+
+function randomLocationId() {
+  return LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)].id;
+}
+
+function makeRound(night, round, prevLives, prevScore) {
+  const vedhaLocation = randomLocationId();
+  return {
+    night,
+    round,
+    lives: prevLives,
+    score: prevScore,
+    power: 100,
+    vedhaLocation,
+    viewedLocation: null,
+    clue: pickClue(vedhaLocation, night),
+    checkedWrong: [],
+    phase: "search", // search | reveal | story | question | jumpscare
+    story: null,
+    questionOptions: null,
+    correctIndex: null,
+    questionTimeLeft: QUESTION_TIME,
+    flash: null,
+  };
+}
+
+export default function VikramVedhaTamil() {
+  const [screen, setScreen] = useState("start"); // start | playing | win | lose
+  const [game, setGame] = useState(() => makeRound(1, 1, 3, 0));
+  const flashTimeout = useRef(null);
+
+  const startNight = useCallback((night, lives = 3, score = 0) => {
+    setGame(makeRound(night, 1, lives, score));
+    setScreen("playing");
+  }, []);
+
+  /* --- power drain while searching --- */
+  useEffect(() => {
+    if (screen !== "playing" || game.phase !== "search") return;
+    const id = setInterval(() => {
+      setGame((prev) => {
+        if (prev.phase !== "search") return prev;
+        const drain = DRAIN_BASE + prev.night * DRAIN_PER_NIGHT;
+        const power = prev.power - drain;
+        if (power <= 0) {
+          return { ...prev, power: 0, phase: "jumpscare", viewedLocation: prev.vedhaLocation };
+        }
+        return { ...prev, power };
+      });
+    }, 1000);
+    return () => clearInterval(id);
+  }, [screen, game.phase]);
+
+  /* --- jumpscare resolution --- */
+  useEffect(() => {
+    if (game.phase !== "jumpscare") return;
+    const t = setTimeout(() => {
+      setGame((prev) => {
+        const lives = prev.lives - 1;
+        if (lives <= 0) {
+          setScreen("lose");
+          return prev;
+        }
+        return makeRound(prev.night, prev.round, lives, prev.score);
+      });
+    }, 1500);
+    return () => clearTimeout(t);
+  }, [game.phase]);
+
+  /* --- question countdown --- */
+  useEffect(() => {
+    if (screen !== "playing" || game.phase !== "question") return;
+    const id = setInterval(() => {
+      setGame((prev) => {
+        if (prev.phase !== "question") return prev;
+        const t = prev.questionTimeLeft - 1;
+        if (t <= 0) {
+          return prev; // let the effect below handle resolution
+        }
+        return { ...prev, questionTimeLeft: t };
+      });
+    }, 1000);
+    return () => clearInterval(id);
+  }, [screen, game.phase]);
+
+  useEffect(() => {
+    if (game.phase === "question" && game.questionTimeLeft <= 0) {
+      handleAnswer(-1);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [game.questionTimeLeft, game.phase]);
+
+  /* --- clear transient flash --- */
+  useEffect(() => {
+    if (!game.flash) return;
+    clearTimeout(flashTimeout.current);
+    flashTimeout.current = setTimeout(() => {
+      setGame((g) => ({ ...g, flash: null }));
+    }, 1400);
+    return () => clearTimeout(flashTimeout.current);
+  }, [game.flash]);
+
+  const handleSearch = (locId) => {
+    if (game.phase !== "search") return;
+    if (game.checkedWrong.includes(locId)) return;
+
+    if (locId === game.vedhaLocation) {
+      setGame((prev) => ({ ...prev, viewedLocation: locId, phase: "reveal" }));
+      setTimeout(() => {
+        setGame((prev) => ({ ...prev, phase: "story", story: pickStory(prev.vedhaLocation) }));
+      }, 1000);
+    } else {
+      setGame((prev) => ({
+        ...prev,
+        viewedLocation: locId,
+        power: Math.max(0, prev.power - WRONG_PENALTY),
+        checkedWrong: [...prev.checkedWrong, locId],
+        flash: { text: "வேதா இங்கு இல்லை — Not here", kind: "bad" },
+      }));
+    }
+  };
+
+  const proceedToQuestion = () => {
+    setGame((prev) => {
+      const { options, correctIndex } = buildQuestionOptions(prev.story);
+      return { ...prev, phase: "question", questionOptions: options, correctIndex, questionTimeLeft: QUESTION_TIME };
+    });
+  };
+
+  const handleAnswer = (idx) => {
+    setGame((prev) => {
+      if (prev.phase !== "question") return prev;
+      const correct = idx === prev.correctIndex;
+      if (correct) {
+        const score = prev.score + 20 * prev.night;
+        if (prev.round >= ROUNDS_PER_NIGHT) {
+          setScreen("win");
+          return { ...prev, score };
+        }
+        return makeRound(prev.night, prev.round + 1, prev.lives, score);
+      } else {
+        const lives = prev.lives - 1;
+        if (lives <= 0) {
+          setScreen("lose");
+          return prev;
+        }
+        return makeRound(prev.night, prev.round, lives, prev.score);
+      }
+    });
+  };
+
+  return (
+    <div className="vv-root">
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Tamil:wght@500;700&family=Noto+Sans+Tamil:wght@400;600&family=JetBrains+Mono:wght@500;700&display=swap');
+
+        :root {
+          --bg-deep: #0f1420;
+          --bg-panel: #1a2233;
+          --bg-panel-2: #212b40;
+          --lamp-gold: #e8b04b;
+          --kumkum: #c9463a;
+          --kumkum-glow: #ff6b57;
+          --bone: #ece3cf;
+          --bone-dim: #b8ae98;
+        }
+
+        .vv-root {
+          font-family: 'Noto Sans Tamil', sans-serif;
+          background: radial-gradient(ellipse at 50% 0%, #1a2030 0%, var(--bg-deep) 60%, #070a10 100%);
+          color: var(--bone);
+          min-height: 100vh;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 20px;
+          box-sizing: border-box;
+        }
+        .vv-root * { box-sizing: border-box; }
+
+        .vv-shell { width: 100%; max-width: 860px; }
+        .vv-title { font-family: 'Noto Serif Tamil', serif; font-weight: 700; letter-spacing: 0.02em; }
+
+        /* ---------- Start / end cards ---------- */
+        .start-card {
+          background: linear-gradient(180deg, var(--bg-panel), var(--bg-deep));
+          border: 1px solid #33405a;
+          border-radius: 14px;
+          padding: 40px 32px;
+          text-align: center;
+          box-shadow: 0 20px 60px rgba(0,0,0,0.5), inset 0 0 60px rgba(232,176,75,0.04);
+          position: relative;
+          overflow: hidden;
+        }
+        .start-title { font-size: 2.2em; color: var(--lamp-gold); margin: 0 0 4px; text-shadow: 0 0 24px rgba(232,176,75,0.35); }
+        .start-sub {
+          font-family: 'JetBrains Mono', monospace; color: var(--bone-dim); font-size: 0.85em;
+          letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 22px;
+        }
+        .vv-divider { width: 60px; height: 3px; margin: 16px auto; background: var(--kumkum); border-radius: 2px; }
+        .rules { text-align: left; max-width: 520px; margin: 0 auto 24px; font-size: 0.95em; line-height: 1.65; color: var(--bone-dim); }
+        .rules b { color: var(--bone); }
+        .rules-tamil { font-size: 1.05em; color: var(--bone); margin-top: 6px; }
+
+        .vv-btn {
+          font-family: 'Noto Sans Tamil', sans-serif; font-weight: 600; font-size: 1.02em;
+          padding: 13px 30px; border-radius: 8px; border: 1px solid var(--lamp-gold);
+          background: linear-gradient(180deg, #3a3018, #241d0e); color: var(--lamp-gold);
+          cursor: pointer; letter-spacing: 0.02em; transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+        .vv-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(232,176,75,0.25); }
+        .vv-btn.secondary { border-color: #445069; color: var(--bone-dim); background: linear-gradient(180deg, #232c40, #171e2c); }
+
+        /* ---------- HUD ---------- */
+        .hud {
+          display: flex; align-items: center; justify-content: space-between; gap: 12px;
+          background: var(--bg-panel); border: 1px solid #2c3750; border-radius: 10px;
+          padding: 9px 14px; margin-bottom: 10px; font-family: 'JetBrains Mono', monospace; font-size: 0.82em;
+        }
+        .hud-item { display: flex; align-items: center; gap: 6px; color: var(--bone-dim); }
+        .hud-item b { color: var(--bone); font-weight: 700; }
+        .lives { display: flex; gap: 4px; }
+        .tilak { width: 9px; height: 9px; border-radius: 50%; background: var(--kumkum); box-shadow: 0 0 6px var(--kumkum-glow); }
+        .tilak.lost { background: #333c50; box-shadow: none; }
+
+        /* ---------- Lamp bar ---------- */
+        .lamp-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+        .lamp-icon { flex-shrink: 0; }
+        .lamp-bar-wrap { flex: 1; height: 10px; background: rgba(255,255,255,0.08); border-radius: 6px; overflow: hidden; }
+        .lamp-bar-fill { height: 100%; transition: width 0.4s ease; background: linear-gradient(90deg, #f6c453, var(--kumkum)); }
+        .lamp-pct { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--lamp-gold); min-width: 44px; text-align: right; }
+        .lamp-pct.low { color: var(--kumkum-glow); animation: flicker 1.2s infinite; }
+        @keyframes flicker { 0%,100%{opacity:1;} 45%{opacity:0.4;} 55%{opacity:0.9;} 70%{opacity:0.3;} }
+
+        /* ---------- Location tab bar ---------- */
+        .loc-bar {
+          display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px;
+        }
+        .loc-tab {
+          flex: 1 1 22%; min-width: 82px;
+          background: var(--bg-panel-2); border: 1px solid #3a4763; border-radius: 8px;
+          padding: 7px 5px; text-align: center; cursor: pointer; color: var(--bone-dim);
+          transition: border-color 0.15s ease, transform 0.1s ease;
+        }
+        .loc-tab:hover { border-color: var(--lamp-gold); transform: translateY(-1px); }
+        .loc-tab .lt-tamil { font-size: 0.95em; color: var(--bone); display: block; }
+        .loc-tab .lt-en { font-family: 'JetBrains Mono', monospace; font-size: 0.6em; letter-spacing: 0.04em; }
+        .loc-tab.wrong { opacity: 0.35; cursor: not-allowed; border-color: #2c3750; }
+        .loc-tab.wrong:hover { transform: none; border-color: #2c3750; }
+        .loc-tab.disabled { pointer-events: none; }
+
+        /* ---------- Clue panel ---------- */
+        .clue-panel {
+          background: linear-gradient(180deg, #241d10, #171208);
+          border: 1px solid var(--lamp-gold);
+          border-radius: 10px;
+          padding: 14px 16px;
+          margin-bottom: 10px;
+          text-align: center;
+        }
+        .clue-label { font-family: 'JetBrains Mono', monospace; font-size: 0.68em; color: var(--kumkum-glow); letter-spacing: 0.12em; margin-bottom: 6px; }
+        .clue-sentence { font-family: 'Noto Serif Tamil', serif; font-size: 1.5em; color: var(--lamp-gold); margin-bottom: 2px; }
+        .clue-translit { color: var(--bone-dim); font-size: 0.85em; font-style: italic; margin-bottom: 4px; }
+        .clue-meaning { color: var(--bone); font-size: 0.85em; }
+        .clue-fit { font-family: 'JetBrains Mono', monospace; font-size: 0.65em; color: var(--bone-dim); margin-top: 6px; }
+
+        /* ---------- Scene viewport ---------- */
+        .viewport {
+          background: #05070c; border: 3px solid #3a2f1a; border-radius: 10px; position: relative;
+          height: 260px; overflow: hidden; box-shadow: inset 0 0 80px rgba(0,0,0,0.7), 0 0 0 1px #171308;
+        }
+        .flash-msg {
+          position: absolute; top: 10px; right: 12px; left: 12px; text-align: center; font-size: 0.8em;
+          padding: 6px 10px; border-radius: 6px; z-index: 6; font-family: 'JetBrains Mono', monospace;
+          background: rgba(201,70,58,0.25); color: #f2a89f; border: 1px solid var(--kumkum);
+        }
+        .scene-tag {
+          position: absolute; top: 10px; left: 12px; font-family: 'JetBrains Mono', monospace; font-size: 0.7em;
+          color: var(--bone-dim); letter-spacing: 0.1em; z-index: 5;
+        }
+        .scene-fade { position: absolute; inset: 0; animation: sceneFadeIn 0.35s ease; }
+        @keyframes sceneFadeIn { from { opacity: 0.25; } to { opacity: 1; } }
+
+        .eye { fill: var(--kumkum-glow); filter: drop-shadow(0 0 4px var(--kumkum-glow)); }
+
+        .speech-bubble {
+          position: absolute; top: 14px; left: 50%; transform: translateX(-50%);
+          background: var(--bone); color: #1a1208; padding: 6px 12px; border-radius: 10px;
+          font-family: 'Noto Serif Tamil', serif; font-size: 0.95em; white-space: nowrap;
+        }
+
+        /* ---------- Jumpscare ---------- */
+        .jumpscare-overlay {
+          position: absolute; inset: 0; background: #1a0303; display: flex; align-items: center; justify-content: center;
+          z-index: 20; animation: shake 0.12s infinite;
+        }
+        @keyframes shake { 0%{transform:translate(0,0);} 25%{transform:translate(-3px,2px);} 50%{transform:translate(3px,-2px);} 75%{transform:translate(-2px,-3px);} 100%{transform:translate(2px,3px);} }
+        .jumpscare-text {
+          font-family: 'Noto Serif Tamil', serif; font-size: 2em; color: var(--kumkum-glow);
+          text-shadow: 0 0 20px var(--kumkum-glow);
+        }
+
+        /* ---------- Story / question modal ---------- */
+        .story-overlay {
+          position: absolute; inset: 0; background: rgba(6,5,3,0.92); display: flex; align-items: center;
+          justify-content: center; z-index: 10; padding: 14px;
+        }
+        .story-card {
+          background: linear-gradient(180deg, #241d10, #171208); border: 2px solid var(--lamp-gold);
+          border-radius: 12px; padding: 18px 20px; width: 100%; max-width: 480px; text-align: left;
+        }
+        .story-warn { font-family: 'JetBrains Mono', monospace; color: var(--lamp-gold); font-size: 0.72em; letter-spacing: 0.1em; margin-bottom: 10px; text-align: center; }
+        .story-tamil { font-family: 'Noto Serif Tamil', serif; font-size: 1.15em; color: var(--bone); line-height: 1.6; margin-bottom: 8px; }
+        .story-translit { color: var(--bone-dim); font-size: 0.82em; font-style: italic; line-height: 1.5; margin-bottom: 8px; }
+        .story-english { color: var(--bone-dim); font-size: 0.85em; line-height: 1.5; margin-bottom: 14px; }
+        .story-q { font-family: 'Noto Serif Tamil', serif; font-size: 1.1em; color: var(--lamp-gold); text-align: center; margin-bottom: 2px; }
+        .story-q-en { font-family: 'JetBrains Mono', monospace; font-size: 0.72em; color: var(--bone-dim); text-align: center; margin-bottom: 14px; }
+        .story-timer-wrap { height: 5px; background: rgba(255,255,255,0.08); border-radius: 3px; margin-bottom: 14px; overflow: hidden; }
+        .story-timer-fill { height: 100%; background: var(--kumkum); transition: width 1s linear; }
+        .story-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .story-opt {
+          font-family: 'Noto Sans Tamil', sans-serif; padding: 11px 8px; border-radius: 8px; border: 1px solid #4a3a22;
+          background: #2c2414; color: var(--bone); cursor: pointer; font-size: 0.85em; text-align: center;
+        }
+        .story-opt:hover { border-color: var(--lamp-gold); }
+
+        .end-stats { font-family: 'JetBrains Mono', monospace; color: var(--bone-dim); margin: 16px 0; line-height: 1.8; }
+        .end-stats b { color: var(--lamp-gold); }
+
+        @media (max-width: 560px) {
+          .loc-tab { flex: 1 1 30%; }
+        }
+      `}</style>
+
+      <div className="vv-shell">
+        {screen === "start" && (
+          <div className="start-card">
+            <div className="start-title vv-title">விக்ரம் வேதாள்</div>
+            <div className="start-sub">Find Vedha — A Tamil Vocabulary Hunt</div>
+            <div className="vv-divider" />
+            <div className="rules">
+              <p>
+                <b>வேதாள்</b> is hiding somewhere in the kingdom — the forest, the palace, a tea shop, a
+                bedroom, the market, the temple, or one of six more medieval spots. He calls out a hint
+                sentence using a word tied to his hiding place.
+              </p>
+              <p>
+                Tap the location you think he's in from the bar at the top. Some hints could fit more than
+                one place — think carefully, because every wrong guess burns your lamp faster!
+              </p>
+              <p>
+                Find him before the lamp goes dark, or he'll jump out and startle you. Once found, he'll
+                tell you a short <b>kadhai</b> (story) — answer his question correctly to defeat him and
+                move to the next hiding spot.
+              </p>
+              <p className="rules-tamil">
+                🪔 விளக்கு அணைந்தால் வேதாள் திடீரென்று வருவான். மூன்று உயிர்கள் மட்டுமே உள்ளன!
+              </p>
+            </div>
+            <button className="vv-btn" onClick={() => startNight(1)}>
+              தேடத் தொடங்கு · Start Searching
+            </button>
+          </div>
+        )}
+
+        {screen === "playing" && (
+          <PlayingScreen
+            game={game}
+            onSearch={handleSearch}
+            onProceedToQuestion={proceedToQuestion}
+            onAnswer={handleAnswer}
+          />
+        )}
+
+        {screen === "win" && (
+          <div className="start-card">
+            <div className="start-title vv-title" style={{ color: "var(--lamp-gold)" }}>
+              வெற்றி! 🏆
+            </div>
+            <div className="start-sub">You defeated Vedha through Night {game.night}</div>
+            <div className="vv-divider" />
+            <div className="end-stats">
+              Score: <b>{game.score}</b>
+              <br />
+              Lives remaining: <b>{game.lives}</b>
+            </div>
+            <button className="vv-btn" onClick={() => startNight(game.night + 1, 3, game.score)}>
+              அடுத்த இரவு · Next Night ({game.night + 1})
+            </button>{" "}
+            <button className="vv-btn secondary" onClick={() => setScreen("start")}>
+              நிறுத்து · Stop here
+            </button>
+          </div>
+        )}
+
+        {screen === "lose" && (
+          <div className="start-card">
+            <div className="start-title vv-title" style={{ color: "var(--kumkum-glow)" }}>
+              வேதாள் வென்றான்! 👻
+            </div>
+            <div className="start-sub">Night {game.night} ends here</div>
+            <div className="vv-divider" />
+            <div className="end-stats">
+              Final score: <b>{game.score}</b>
+            </div>
+            <button className="vv-btn" onClick={() => startNight(1)}>
+              மீண்டும் முயற்சி · Try Again
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function PlayingScreen({ game, onSearch, onProceedToQuestion, onAnswer }) {
+  const low = game.power < 30;
+  const fitCount = game.clue.locations.length;
+
+  return (
+    <div>
+      <div className="hud">
+        <div className="hud-item">
+          இரவு <b>{game.night}</b> · சுற்று <b>{game.round}/{ROUNDS_PER_NIGHT}</b>
+        </div>
+        <div className="hud-item">
+          <span>உயிர்</span>
+          <div className="lives">
+            {[0, 1, 2].map((i) => (
+              <div key={i} className={`tilak ${i < game.lives ? "" : "lost"}`} />
+            ))}
+          </div>
+        </div>
+        <div className="hud-item">
+          மதிப்பெண் <b>{game.score}</b>
+        </div>
+      </div>
+
+      <div className="lamp-row">
+        <LampIcon low={low} />
+        <div className="lamp-bar-wrap">
+          <div className="lamp-bar-fill" style={{ width: `${game.power}%` }} />
+        </div>
+        <div className={`lamp-pct ${low ? "low" : ""}`}>{Math.round(game.power)}%</div>
+      </div>
+
+      <div className="clue-panel">
+        <div className="clue-label">வேதாள் கூவுகிறான் — VEDHA CALLS OUT</div>
+        <div className="clue-sentence">
+          {game.clue.template} {game.clue.word}
+        </div>
+        <div className="clue-translit">
+          {game.clue.templateTranslit} {game.clue.translit}
+        </div>
+        <div className="clue-meaning">"{game.clue.meaning}"</div>
+        <div className="clue-fit">
+          {fitCount > 1 ? `இது ${fitCount} இடங்களில் பொருந்தும் — could fit ${fitCount} places` : "இது ஒரே இடத்திற்குப் பொருந்தும் — this only fits one place"}
+        </div>
+      </div>
+
+      <div className="loc-bar">
+        {LOCATIONS.map((loc) => {
+          const isWrong = game.checkedWrong.includes(loc.id);
+          return (
+            <div
+              key={loc.id}
+              className={`loc-tab ${isWrong ? "wrong" : ""} ${game.phase !== "search" ? "disabled" : ""}`}
+              onClick={() => onSearch(loc.id)}
+            >
+              <span className="lt-tamil">{loc.tamil}</span>
+              <span className="lt-en">{loc.english}</span>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="viewport">
+        <div className="scene-tag">
+          {game.viewedLocation
+            ? `● ${LOCATIONS.find((l) => l.id === game.viewedLocation).tamil} · ${LOCATIONS.find((l) => l.id === game.viewedLocation).english.toUpperCase()}`
+            : "● NIGHT WATCH"}
+        </div>
+        {game.flash && <div className="flash-msg">{game.flash.text}</div>}
+        <div key={game.viewedLocation || "none"} className="scene-fade">
+          <SceneArt locId={game.viewedLocation} showVedha={game.phase !== "search"} />
+        </div>
+        {game.phase === "reveal" && (
+          <div className="speech-bubble">என்னைக் கண்டுபிடித்தாய்!</div>
+        )}
+        {game.phase === "jumpscare" && (
+          <div className="jumpscare-overlay">
+            <div className="jumpscare-text">வேதாள்! 👻</div>
+          </div>
+        )}
+      </div>
+
+      {game.phase === "story" && game.story && (
+        <StoryModal story={game.story} onNext={onProceedToQuestion} />
+      )}
+      {game.phase === "question" && game.story && game.questionOptions && (
+        <QuestionModal story={game.story} options={game.questionOptions} timeLeft={game.questionTimeLeft} onAnswer={onAnswer} />
+      )}
+    </div>
+  );
+}
+
+function SceneArt({ locId, showVedha }) {
+  const loc = LOCATIONS.find((l) => l.id === locId);
+  return (
+    <svg width="100%" height="100%" viewBox="0 0 400 260" preserveAspectRatio="xMidYMax slice" style={{ position: "absolute", inset: 0 }}>
+      <defs>
+        <linearGradient id="sceneGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={loc ? loc.accent2 : "#0f1420"} />
+          <stop offset="100%" stopColor="#05070c" />
+        </linearGradient>
+      </defs>
+      <rect width="400" height="260" fill="url(#sceneGrad)" />
+      {loc ? (
+        <LocationDecor id={locId} accent={loc.accent} />
+      ) : (
+        <text x="200" y="134" textAnchor="middle" fill="#5a6580" fontSize="13" fontFamily="'JetBrains Mono', monospace" letterSpacing="1">
+          தேடத் தொடங்கு · TAP A LOCATION
+        </text>
+      )}
+      {showVedha && loc && (
+        <g transform="translate(200, 210)">
+          <VedhaSVG />
+        </g>
+      )}
+    </svg>
+  );
+}
+
+function LocationDecor({ id, accent }) {
+  switch (id) {
+    case "forest":
+      return (
+        <>
+          <circle cx="340" cy="45" r="22" fill="#eee7cf" opacity="0.7" />
+          <polygon points="60,240 30,140 90,140" fill={accent} opacity="0.8" />
+          <polygon points="130,240 100,120 160,120" fill={accent} opacity="0.7" />
+          <polygon points="320,240 290,150 350,150" fill={accent} opacity="0.75" />
+        </>
+      );
+    case "palace":
+      return (
+        <>
+          <rect x="40" y="90" width="18" height="150" fill={accent} opacity="0.8" />
+          <rect x="342" y="90" width="18" height="150" fill={accent} opacity="0.8" />
+          <polygon points="200,50 150,100 250,100" fill={accent} opacity="0.9" />
+          <rect x="150" y="100" width="100" height="140" fill={accent} opacity="0.4" />
+          <circle cx="200" cy="70" r="8" fill="#eec86a" />
+        </>
+      );
+    case "teashop":
+      return (
+        <>
+          <rect x="60" y="170" width="280" height="20" fill={accent} opacity="0.9" />
+          <rect x="80" y="150" width="24" height="20" fill="#5a3a20" opacity="0.8" />
+          <rect x="140" y="150" width="24" height="20" fill="#5a3a20" opacity="0.8" />
+          <rect x="200" y="150" width="24" height="20" fill="#5a3a20" opacity="0.8" />
+          <path d="M85 150 q3 -12 8 0" stroke="#ccc" strokeWidth="2" fill="none" opacity="0.5" />
+        </>
+      );
+    case "bedroom":
+      return (
+        <>
+          <rect x="110" y="160" width="180" height="70" fill={accent} opacity="0.7" />
+          <rect x="110" y="140" width="180" height="26" fill="#dcd3ba" opacity="0.5" />
+          <rect x="290" y="60" width="60" height="80" fill="#0f1420" opacity="0.6" stroke={accent} strokeWidth="2" />
+          <circle cx="320" cy="90" r="14" fill="#eee7cf" opacity="0.5" />
+        </>
+      );
+    case "market":
+      return (
+        <>
+          <polygon points="60,120 60,180 140,180 140,110 100,90" fill={accent} opacity="0.75" />
+          <polygon points="260,120 260,180 340,180 340,110 300,90" fill={accent} opacity="0.75" />
+          <circle cx="90" cy="160" r="8" fill="#c9463a" opacity="0.7" />
+          <circle cx="110" cy="165" r="8" fill="#e8b04b" opacity="0.7" />
+          <circle cx="290" cy="160" r="8" fill="#3f7a4d" opacity="0.7" />
+        </>
+      );
+    case "temple":
+      return (
+        <>
+          <polygon points="200,30 160,90 240,90" fill={accent} opacity="0.9" />
+          <polygon points="200,60 175,105 225,105" fill={accent} opacity="0.7" />
+          <rect x="170" y="105" width="60" height="130" fill={accent} opacity="0.45" />
+          <circle cx="200" cy="120" r="7" fill="#eec86a" />
+        </>
+      );
+    case "well":
+      return (
+        <>
+          <circle cx="200" cy="195" r="46" fill="none" stroke={accent} strokeWidth="12" opacity="0.85" />
+          <rect x="150" y="100" width="10" height="80" fill={accent} opacity="0.7" />
+          <rect x="240" y="100" width="10" height="80" fill={accent} opacity="0.7" />
+          <polygon points="140,100 260,100 200,70" fill={accent} opacity="0.6" />
+          <line x1="200" y1="100" x2="200" y2="175" stroke="#8a7a55" strokeWidth="3" opacity="0.6" />
+        </>
+      );
+    case "kalari":
+      return (
+        <>
+          <ellipse cx="200" cy="200" rx="150" ry="34" fill="none" stroke={accent} strokeWidth="8" opacity="0.8" />
+          <rect x="55" y="150" width="10" height="55" fill={accent} opacity="0.6" />
+          <rect x="335" y="150" width="10" height="55" fill={accent} opacity="0.6" />
+          <rect x="195" y="150" width="10" height="55" fill={accent} opacity="0.5" />
+        </>
+      );
+    case "forge":
+      return (
+        <>
+          <polygon points="150,230 250,230 235,170 165,170" fill={accent} opacity="0.85" />
+          <rect x="185" y="150" width="30" height="24" fill={accent} opacity="0.9" />
+          <polygon points="270,140 280,120 290,140" fill="#f6c453" opacity="0.8" />
+          <polygon points="290,150 298,132 306,150" fill="#e8944b" opacity="0.7" />
+          <polygon points="255,120 262,105 269,120" fill="#f6c453" opacity="0.6" />
+        </>
+      );
+    case "harbor":
+      return (
+        <>
+          <rect x="0" y="200" width="400" height="10" fill={accent} opacity="0.5" />
+          <polygon points="240,90 240,190 320,190" fill={accent} opacity="0.85" />
+          <rect x="235" y="185" width="10" height="15" fill="#3a2a10" opacity="0.7" />
+          <path d="M40 200 q40 -8 80 0 t80 0 t80 0 t80 0" stroke={accent} strokeWidth="3" fill="none" opacity="0.5" />
+        </>
+      );
+    case "school":
+      return (
+        <>
+          <polygon points="200,60 140,110 260,110" fill={accent} opacity="0.85" />
+          <rect x="150" y="110" width="100" height="110" fill={accent} opacity="0.4" />
+          <rect x="270" y="150" width="50" height="10" fill="#c9a86a" opacity="0.7" />
+          <rect x="270" y="164" width="50" height="10" fill="#c9a86a" opacity="0.6" />
+          <rect x="270" y="178" width="50" height="10" fill="#c9a86a" opacity="0.5" />
+        </>
+      );
+    case "garden":
+      return (
+        <>
+          <path d="M120 230 L120 130" stroke={accent} strokeWidth="4" opacity="0.6" />
+          <circle cx="120" cy="120" r="14" fill={accent} opacity="0.8" />
+          <path d="M220 230 L220 150" stroke={accent} strokeWidth="4" opacity="0.6" />
+          <circle cx="220" cy="140" r="12" fill="#e8b04b" opacity="0.8" />
+          <path d="M300 230 L300 140" stroke={accent} strokeWidth="4" opacity="0.6" />
+          <circle cx="300" cy="130" r="13" fill="#c9463a" opacity="0.7" />
+        </>
+      );
+    default:
+      return null;
+  }
+}
+
+function VedhaSVG() {
+  return (
+    <g>
+      <polygon points="0,-70 -28,10 28,10" fill="#1c1418" stroke="#3a1a1a" strokeWidth="2" />
+      <polygon points="-14,-58 -22,-78 -4,-64" fill="#1c1418" />
+      <polygon points="14,-58 22,-78 4,-64" fill="#1c1418" />
+      <circle className="eye" cx="-9" cy="-40" r="4" />
+      <circle className="eye" cx="9" cy="-40" r="4" />
+      <path d="M -6 -26 Q 0 -20 6 -26" stroke="#ff6b57" strokeWidth="2" fill="none" opacity="0.8" />
+    </g>
+  );
+}
+
+function LampIcon({ low }) {
+  return (
+    <svg className="lamp-icon" width="26" height="30" viewBox="0 0 26 30">
+      <ellipse cx="13" cy="26" rx="11" ry="4" fill="#4a3618" stroke="#6b4d1f" strokeWidth="1.5" />
+      <path
+        d="M13 20 C9 17 10 12 13 8 C16 12 17 17 13 20 Z"
+        fill={low ? "#c9463a" : "#f6c453"}
+        style={{ animation: low ? "flicker 1.2s infinite" : "none" }}
+      />
+    </svg>
+  );
+}
+
+function StoryModal({ story, onNext }) {
+  return (
+    <div className="story-overlay">
+      <div className="story-card">
+        <div className="story-warn">வேதாள் ஒரு கதை சொல்கிறான் — VEDHA TELLS A STORY</div>
+        <div className="story-tamil">{story.tamil}</div>
+        <div className="story-translit">{story.translit}</div>
+        <div className="story-english">{story.english}</div>
+        <button className="vv-btn" style={{ width: "100%" }} onClick={onNext}>
+          தொடர்க · Continue
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function QuestionModal({ story, options, timeLeft, onAnswer }) {
+  return (
+    <div className="story-overlay">
+      <div className="story-card">
+        <div className="story-warn">சரியாக பதில் சொல்லி வேதாளை வெல்! — ANSWER TO DEFEAT HIM</div>
+        <div className="story-q">{story.question}</div>
+        <div className="story-q-en">{story.questionEnglish}</div>
+        <div className="story-timer-wrap">
+          <div className="story-timer-fill" style={{ width: `${(timeLeft / QUESTION_TIME) * 100}%` }} />
+        </div>
+        <div className="story-opts">
+          {options.map((opt, i) => (
+            <div key={i} className="story-opt" onClick={() => onAnswer(i)}>
+              {opt}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
