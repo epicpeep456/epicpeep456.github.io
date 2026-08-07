@@ -1,0 +1,92 @@
+{
+  "package.json": {
+    "mtime": 1784080886.475594,
+    "ast_hash": "ac7e343d178d3fed777a9b1256d0633c",
+    "semantic_hash": "ac7e343d178d3fed777a9b1256d0633c"
+  },
+  "public/manifest.json": {
+    "mtime": 1784080886.477842,
+    "ast_hash": "3c741bedd0c22386888999bf2d1ae7f2",
+    "semantic_hash": "3c741bedd0c22386888999bf2d1ae7f2"
+  },
+  "src/App.js": {
+    "mtime": 1784080886.478843,
+    "ast_hash": "7d89df138dc9ffa2a3a68a45e7c34d31",
+    "semantic_hash": "7d89df138dc9ffa2a3a68a45e7c34d31"
+  },
+  "src/App.test.js": {
+    "mtime": 1784080886.4798417,
+    "ast_hash": "9494ff40ac157cfe5daae67dbf64fe62",
+    "semantic_hash": "9494ff40ac157cfe5daae67dbf64fe62"
+  },
+  "src/components/Game.js": {
+    "mtime": 1784129005.4187062,
+    "ast_hash": "99f74d1911c76767e9c8461b138b39cf",
+    "semantic_hash": ""
+  },
+  "src/components/HUD.js": {
+    "mtime": 1784080886.4798417,
+    "ast_hash": "6dc65d1264c5b3014a432a48752c300f",
+    "semantic_hash": "6dc65d1264c5b3014a432a48752c300f"
+  },
+  "src/components/Menu.js": {
+    "mtime": 1784080886.4813147,
+    "ast_hash": "4e7c0fd917bc52748ca6a1dddfa76249",
+    "semantic_hash": "4e7c0fd917bc52748ca6a1dddfa76249"
+  },
+  "src/data/tamilCharacters.js": {
+    "mtime": 1784080886.4823203,
+    "ast_hash": "6749bab6226caae3fced3bf70523d5b5",
+    "semantic_hash": "6749bab6226caae3fced3bf70523d5b5"
+  },
+  "src/game/engine.js": {
+    "mtime": 1784128881.301932,
+    "ast_hash": "b2cbc066d22f2ff54e7b9890d0a4db4f",
+    "semantic_hash": ""
+  },
+  "src/game/engine.test.js": {
+    "mtime": 1784080886.4823203,
+    "ast_hash": "c412d485bdf8b53f8d5b771fc8670586",
+    "semantic_hash": "c412d485bdf8b53f8d5b771fc8670586"
+  },
+  "src/index.js": {
+    "mtime": 1784080886.4838252,
+    "ast_hash": "91766462c8a989999cbc959a5d7f3e30",
+    "semantic_hash": "91766462c8a989999cbc959a5d7f3e30"
+  },
+  "src/setupTests.js": {
+    "mtime": 1783982417.08909,
+    "ast_hash": "72158175c4ba432ede32a7c2ca4143e0",
+    "semantic_hash": "72158175c4ba432ede32a7c2ca4143e0"
+  },
+  "DESIGN.md": {
+    "mtime": 1784080886.4660783,
+    "ast_hash": "bbe11231ceacb8f35bd52a9a21235955",
+    "semantic_hash": ""
+  },
+  "HANDOFF.md": {
+    "mtime": 1784129503.365334,
+    "ast_hash": "4422e35a041bf49fcb3781306190f7db",
+    "semantic_hash": ""
+  },
+  "HANDOFF_CONTEXT.md": {
+    "mtime": 1784128144.2787628,
+    "ast_hash": "b733b0826ea23fd29e84956c1a76d881",
+    "semantic_hash": ""
+  },
+  "README.md": {
+    "mtime": 1784080886.4670832,
+    "ast_hash": "3253162cfce77d0fc2df234b649a2231",
+    "semantic_hash": ""
+  },
+  "public/index.html": {
+    "mtime": 1784080886.4768367,
+    "ast_hash": "c9e1a1505dcfeca68476586c27979c33",
+    "semantic_hash": ""
+  },
+  "public/robots.txt": {
+    "mtime": 1783982417.0860891,
+    "ast_hash": "61c27d2cd39a713f7829422c3d9edcc7",
+    "semantic_hash": ""
+  }
+}

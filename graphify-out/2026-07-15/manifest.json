@@ -1,0 +1,62 @@
+{
+  "package.json": {
+    "mtime": 1784080886.475594,
+    "ast_hash": "ac7e343d178d3fed777a9b1256d0633c",
+    "semantic_hash": "ac7e343d178d3fed777a9b1256d0633c"
+  },
+  "public/manifest.json": {
+    "mtime": 1784080886.477842,
+    "ast_hash": "3c741bedd0c22386888999bf2d1ae7f2",
+    "semantic_hash": "3c741bedd0c22386888999bf2d1ae7f2"
+  },
+  "src/App.js": {
+    "mtime": 1784080886.478843,
+    "ast_hash": "7d89df138dc9ffa2a3a68a45e7c34d31",
+    "semantic_hash": "7d89df138dc9ffa2a3a68a45e7c34d31"
+  },
+  "src/App.test.js": {
+    "mtime": 1784080886.4798417,
+    "ast_hash": "9494ff40ac157cfe5daae67dbf64fe62",
+    "semantic_hash": "9494ff40ac157cfe5daae67dbf64fe62"
+  },
+  "src/components/Game.js": {
+    "mtime": 1784082112.1158264,
+    "ast_hash": "238351cf37f4ff47cb6d4423c5202fa0",
+    "semantic_hash": "238351cf37f4ff47cb6d4423c5202fa0"
+  },
+  "src/components/HUD.js": {
+    "mtime": 1784080886.4798417,
+    "ast_hash": "6dc65d1264c5b3014a432a48752c300f",
+    "semantic_hash": "6dc65d1264c5b3014a432a48752c300f"
+  },
+  "src/components/Menu.js": {
+    "mtime": 1784080886.4813147,
+    "ast_hash": "4e7c0fd917bc52748ca6a1dddfa76249",
+    "semantic_hash": "4e7c0fd917bc52748ca6a1dddfa76249"
+  },
+  "src/data/tamilCharacters.js": {
+    "mtime": 1784080886.4823203,
+    "ast_hash": "6749bab6226caae3fced3bf70523d5b5",
+    "semantic_hash": "6749bab6226caae3fced3bf70523d5b5"
+  },
+  "src/game/engine.js": {
+    "mtime": 1784080886.4823203,
+    "ast_hash": "a6b3f4e6f915acf990dfd0ba7932f4ca",
+    "semantic_hash": "a6b3f4e6f915acf990dfd0ba7932f4ca"
+  },
+  "src/game/engine.test.js": {
+    "mtime": 1784080886.4823203,
+    "ast_hash": "c412d485bdf8b53f8d5b771fc8670586",
+    "semantic_hash": "c412d485bdf8b53f8d5b771fc8670586"
+  },
+  "src/index.js": {
+    "mtime": 1784080886.4838252,
+    "ast_hash": "91766462c8a989999cbc959a5d7f3e30",
+    "semantic_hash": "91766462c8a989999cbc959a5d7f3e30"
+  },
+  "src/setupTests.js": {
+    "mtime": 1783982417.08909,
+    "ast_hash": "72158175c4ba432ede32a7c2ca4143e0",
+    "semantic_hash": "72158175c4ba432ede32a7c2ca4143e0"
+  }
+}

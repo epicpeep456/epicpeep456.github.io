@@ -1,0 +1,237 @@
+{
+  "communities": {
+    "0": [
+      "package",
+      "package_dependencies",
+      "package_dependencies_react",
+      "package_dependencies_react_dom",
+      "package_dependencies_react_scripts",
+      "package_eslintconfig",
+      "package_eslintconfig_extends",
+      "package_name",
+      "package_private",
+      "package_scripts",
+      "package_scripts_build",
+      "package_scripts_eject",
+      "package_scripts_start",
+      "package_scripts_test",
+      "package_version",
+      "react",
+      "react_dom",
+      "react_scripts",
+      "ref_react_app",
+      "ref_react_app_jest"
+    ],
+    "1": [
+      "src_game_engine",
+      "src_game_engine_allmoleshidden",
+      "src_game_engine_creategamestate",
+      "src_game_engine_difficulty_presets",
+      "src_game_engine_easeoutcubic",
+      "src_game_engine_findemptyholes",
+      "src_game_engine_getholepositions",
+      "src_game_engine_handleclick",
+      "src_game_engine_pickdistractors",
+      "src_game_engine_pickrandomcharacter",
+      "src_game_engine_spawnbatch",
+      "src_game_engine_states",
+      "src_game_engine_test",
+      "src_game_engine_test_setupvisiblemole",
+      "src_game_engine_test_testcharacters",
+      "src_game_engine_updategamestate",
+      "src_game_engine_updatemole"
+    ],
+    "2": [
+      "src_components_game",
+      "src_components_game_colors",
+      "src_components_game_drawbackground",
+      "src_components_game_drawdirtmound",
+      "src_components_game_drawholeinteriors",
+      "src_components_game_drawholerims",
+      "src_components_game_drawmolesprite",
+      "src_components_game_drawpauseoverlay",
+      "src_components_game_drawwhackeffect",
+      "src_components_game_drawwhackeffects",
+      "src_components_game_drawwronghiteffect",
+      "src_components_game_drawwronghiteffects",
+      "src_components_game_game",
+      "src_components_game_playplaceholderaudio",
+      "src_components_hud",
+      "src_components_hud_hud"
+    ],
+    "3": [
+      "package_browserslist",
+      "package_browserslist_development",
+      "package_browserslist_production",
+      "ref_0_2",
+      "ref_last_1_chrome_version",
+      "ref_last_1_firefox_version",
+      "ref_last_1_safari_version",
+      "ref_not_dead",
+      "ref_not_op_mini_all"
+    ],
+    "4": [
+      "src_components_menu",
+      "src_components_menu_difficulty_options",
+      "src_components_menu_menu",
+      "src_components_menu_menu_options",
+      "src_data_tamilcharacters",
+      "src_data_tamilcharacters_charactersets",
+      "src_data_tamilcharacters_compound",
+      "src_data_tamilcharacters_consonants",
+      "src_data_tamilcharacters_vowels"
+    ],
+    "5": [
+      "public_manifest",
+      "public_manifest_background_color",
+      "public_manifest_display",
+      "public_manifest_icons",
+      "public_manifest_name",
+      "public_manifest_short_name",
+      "public_manifest_start_url",
+      "public_manifest_theme_color"
+    ],
+    "6": [
+      "src_app",
+      "src_app_app",
+      "src_app_formatdate",
+      "src_app_loadscores",
+      "src_app_savescore",
+      "src_app_test",
+      "src_index",
+      "src_index_root"
+    ],
+    "7": [
+      "package_devdependencies",
+      "package_devdependencies_testing_library_dom",
+      "package_devdependencies_testing_library_jest_dom",
+      "package_devdependencies_testing_library_react",
+      "package_devdependencies_testing_library_user_event",
+      "testing_library_dom",
+      "testing_library_user_event"
+    ],
+    "8": [
+      "src_setuptests"
+    ]
+  },
+  "cohesion": {
+    "0": 0.1,
+    "1": 0.22058823529411764,
+    "2": 0.225,
+    "3": 0.2222222222222222,
+    "4": 0.25,
+    "5": 0.25,
+    "6": 0.42857142857142855,
+    "7": 0.38095238095238093,
+    "8": 1.0
+  },
+  "gods": [
+    {
+      "id": "src_components_game_game",
+      "label": "Game()",
+      "degree": 14
+    },
+    {
+      "id": "src_game_engine_creategamestate",
+      "label": "createGameState()",
+      "degree": 6
+    },
+    {
+      "id": "src_game_engine_spawnbatch",
+      "label": "spawnBatch()",
+      "degree": 6
+    },
+    {
+      "id": "src_game_engine_updategamestate",
+      "label": "updateGameState()",
+      "degree": 6
+    },
+    {
+      "id": "package_scripts",
+      "label": "scripts",
+      "degree": 5
+    },
+    {
+      "id": "src_app_app",
+      "label": "App()",
+      "degree": 5
+    },
+    {
+      "id": "src_game_engine_handleclick",
+      "label": "handleClick()",
+      "degree": 5
+    },
+    {
+      "id": "package_browserslist_production",
+      "label": "production",
+      "degree": 4
+    },
+    {
+      "id": "package_browserslist_development",
+      "label": "development",
+      "degree": 4
+    },
+    {
+      "id": "src_game_engine_pickrandomcharacter",
+      "label": "pickRandomCharacter()",
+      "degree": 4
+    }
+  ],
+  "surprises": [
+    {
+      "source": "Game()",
+      "target": "createGameState()",
+      "source_files": [
+        "src/components/Game.js",
+        "src/game/engine.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "bridges separate communities"
+    },
+    {
+      "source": "Game()",
+      "target": "handleClick()",
+      "source_files": [
+        "src/components/Game.js",
+        "src/game/engine.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "bridges separate communities"
+    },
+    {
+      "source": "Game()",
+      "target": "updateGameState()",
+      "source_files": [
+        "src/components/Game.js",
+        "src/game/engine.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "bridges separate communities"
+    }
+  ],
+  "questions": [
+    {
+      "type": "bridge_node",
+      "question": "Why does `browserslist` connect `development` to `package.json`?",
+      "why": "High betweenness centrality (0.053) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `Game()` connect `Game.js` to `engine.js`, `App.js`?",
+      "why": "High betweenness centrality (0.046) - this node is a cross-community bridge."
+    },
+    {
+      "type": "isolated_nodes",
+      "question": "What connects `name`, `version`, `private` to the rest of the system?",
+      "why": "35 weakly-connected nodes found - possible documentation gaps or missing edges."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `package.json` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.1 - nodes in this community are weakly interconnected."
+    }
+  ]
+}

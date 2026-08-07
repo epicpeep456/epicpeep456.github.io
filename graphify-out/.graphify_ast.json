@@ -1,0 +1,2106 @@
+{
+  "nodes": [
+    {
+      "id": "package",
+      "label": "package.json",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "package_name",
+      "label": "name",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L2",
+      "_origin": "ast"
+    },
+    {
+      "id": "package_version",
+      "label": "version",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L3",
+      "_origin": "ast"
+    },
+    {
+      "id": "package_private",
+      "label": "private",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L4",
+      "_origin": "ast"
+    },
+    {
+      "id": "package_dependencies",
+      "label": "dependencies",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "package_dependencies_react",
+      "label": "react",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L6",
+      "_origin": "ast"
+    },
+    {
+      "id": "react",
+      "label": "react",
+      "file_type": "concept",
+      "source_file": "package.json",
+      "source_location": "L6",
+      "_origin": "ast"
+    },
+    {
+      "id": "package_dependencies_react_dom",
+      "label": "react-dom",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L7",
+      "_origin": "ast"
+    },
+    {
+      "id": "react_dom",
+      "label": "react-dom",
+      "file_type": "concept",
+      "source_file": "package.json",
+      "source_location": "L7",
+      "_origin": "ast"
+    },
+    {
+      "id": "package_dependencies_react_scripts",
+      "label": "react-scripts",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L8",
+      "_origin": "ast"
+    },
+    {
+      "id": "react_scripts",
+      "label": "react-scripts",
+      "file_type": "concept",
+      "source_file": "package.json",
+      "source_location": "L8",
+      "_origin": "ast"
+    },
+    {
+      "id": "package_devdependencies",
+      "label": "devDependencies",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L10",
+      "_origin": "ast"
+    },
+    {
+      "id": "package_devdependencies_testing_library_dom",
+      "label": "@testing-library/dom",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L11",
+      "_origin": "ast"
+    },
+    {
+      "id": "testing_library_dom",
+      "label": "@testing-library/dom",
+      "file_type": "concept",
+      "source_file": "package.json",
+      "source_location": "L11",
+      "_origin": "ast"
+    },
+    {
+      "id": "package_devdependencies_testing_library_jest_dom",
+      "label": "@testing-library/jest-dom",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L12",
+      "_origin": "ast"
+    },
+    {
+      "id": "testing_library_jest_dom",
+      "label": "@testing-library/jest-dom",
+      "file_type": "concept",
+      "source_file": "package.json",
+      "source_location": "L12",
+      "_origin": "ast"
+    },
+    {
+      "id": "package_devdependencies_testing_library_react",
+      "label": "@testing-library/react",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L13",
+      "_origin": "ast"
+    },
+    {
+      "id": "testing_library_react",
+      "label": "@testing-library/react",
+      "file_type": "concept",
+      "source_file": "package.json",
+      "source_location": "L13",
+      "_origin": "ast"
+    },
+    {
+      "id": "package_devdependencies_testing_library_user_event",
+      "label": "@testing-library/user-event",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L14",
+      "_origin": "ast"
+    },
+    {
+      "id": "testing_library_user_event",
+      "label": "@testing-library/user-event",
+      "file_type": "concept",
+      "source_file": "package.json",
+      "source_location": "L14",
+      "_origin": "ast"
+    },
+    {
+      "id": "package_scripts",
+      "label": "scripts",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L16",
+      "_origin": "ast"
+    },
+    {
+      "id": "package_scripts_start",
+      "label": "start",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L17",
+      "_origin": "ast"
+    },
+    {
+      "id": "package_scripts_build",
+      "label": "build",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L18",
+      "_origin": "ast"
+    },
+    {
+      "id": "package_scripts_test",
+      "label": "test",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L19",
+      "_origin": "ast"
+    },
+    {
+      "id": "package_scripts_eject",
+      "label": "eject",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L20",
+      "_origin": "ast"
+    },
+    {
+      "id": "package_eslintconfig",
+      "label": "eslintConfig",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L22",
+      "_origin": "ast"
+    },
+    {
+      "id": "package_eslintconfig_extends",
+      "label": "extends",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L23",
+      "_origin": "ast"
+    },
+    {
+      "id": "ref_react_app",
+      "label": "react-app",
+      "file_type": "concept",
+      "source_file": "package.json",
+      "source_location": "L23",
+      "_origin": "ast"
+    },
+    {
+      "id": "ref_react_app_jest",
+      "label": "react-app/jest",
+      "file_type": "concept",
+      "source_file": "package.json",
+      "source_location": "L23",
+      "_origin": "ast"
+    },
+    {
+      "id": "package_browserslist",
+      "label": "browserslist",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L28",
+      "_origin": "ast"
+    },
+    {
+      "id": "package_browserslist_production",
+      "label": "production",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L29",
+      "_origin": "ast"
+    },
+    {
+      "id": "ref_0_2",
+      "label": ">0.2%",
+      "file_type": "concept",
+      "source_file": "package.json",
+      "source_location": "L29",
+      "_origin": "ast"
+    },
+    {
+      "id": "ref_not_dead",
+      "label": "not dead",
+      "file_type": "concept",
+      "source_file": "package.json",
+      "source_location": "L29",
+      "_origin": "ast"
+    },
+    {
+      "id": "ref_not_op_mini_all",
+      "label": "not op_mini all",
+      "file_type": "concept",
+      "source_file": "package.json",
+      "source_location": "L29",
+      "_origin": "ast"
+    },
+    {
+      "id": "package_browserslist_development",
+      "label": "development",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L34",
+      "_origin": "ast"
+    },
+    {
+      "id": "ref_last_1_chrome_version",
+      "label": "last 1 chrome version",
+      "file_type": "concept",
+      "source_file": "package.json",
+      "source_location": "L34",
+      "_origin": "ast"
+    },
+    {
+      "id": "ref_last_1_firefox_version",
+      "label": "last 1 firefox version",
+      "file_type": "concept",
+      "source_file": "package.json",
+      "source_location": "L34",
+      "_origin": "ast"
+    },
+    {
+      "id": "ref_last_1_safari_version",
+      "label": "last 1 safari version",
+      "file_type": "concept",
+      "source_file": "package.json",
+      "source_location": "L34",
+      "_origin": "ast"
+    },
+    {
+      "id": "public_manifest",
+      "label": "manifest.json",
+      "file_type": "code",
+      "source_file": "public/manifest.json",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "public_manifest_short_name",
+      "label": "short_name",
+      "file_type": "code",
+      "source_file": "public/manifest.json",
+      "source_location": "L2",
+      "_origin": "ast"
+    },
+    {
+      "id": "public_manifest_name",
+      "label": "name",
+      "file_type": "code",
+      "source_file": "public/manifest.json",
+      "source_location": "L3",
+      "_origin": "ast"
+    },
+    {
+      "id": "public_manifest_icons",
+      "label": "icons",
+      "file_type": "code",
+      "source_file": "public/manifest.json",
+      "source_location": "L4",
+      "_origin": "ast"
+    },
+    {
+      "id": "public_manifest_start_url",
+      "label": "start_url",
+      "file_type": "code",
+      "source_file": "public/manifest.json",
+      "source_location": "L11",
+      "_origin": "ast"
+    },
+    {
+      "id": "public_manifest_display",
+      "label": "display",
+      "file_type": "code",
+      "source_file": "public/manifest.json",
+      "source_location": "L12",
+      "_origin": "ast"
+    },
+    {
+      "id": "public_manifest_theme_color",
+      "label": "theme_color",
+      "file_type": "code",
+      "source_file": "public/manifest.json",
+      "source_location": "L13",
+      "_origin": "ast"
+    },
+    {
+      "id": "public_manifest_background_color",
+      "label": "background_color",
+      "file_type": "code",
+      "source_file": "public/manifest.json",
+      "source_location": "L14",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_app",
+      "label": "App.js",
+      "file_type": "code",
+      "source_file": "src/App.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_app_loadscores",
+      "label": "loadScores()",
+      "file_type": "code",
+      "source_file": "src/App.js",
+      "source_location": "L8",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_app_savescore",
+      "label": "saveScore()",
+      "file_type": "code",
+      "source_file": "src/App.js",
+      "source_location": "L16",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_app_formatdate",
+      "label": "formatDate()",
+      "file_type": "code",
+      "source_file": "src/App.js",
+      "source_location": "L25",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_app_app",
+      "label": "App()",
+      "file_type": "code",
+      "source_file": "src/App.js",
+      "source_location": "L30",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_app_test",
+      "label": "App.test.js",
+      "file_type": "code",
+      "source_file": "src/App.test.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_components_game",
+      "label": "Game.js",
+      "file_type": "code",
+      "source_file": "src/components/Game.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_components_game_playplaceholderaudio",
+      "label": "playPlaceholderAudio()",
+      "file_type": "code",
+      "source_file": "src/components/Game.js",
+      "source_location": "L17",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_components_game_drawbackground",
+      "label": "drawBackground()",
+      "file_type": "code",
+      "source_file": "src/components/Game.js",
+      "source_location": "L28",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_components_game_drawholeinteriors",
+      "label": "drawHoleInteriors()",
+      "file_type": "code",
+      "source_file": "src/components/Game.js",
+      "source_location": "L53",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_components_game_drawholerims",
+      "label": "drawHoleRims()",
+      "file_type": "code",
+      "source_file": "src/components/Game.js",
+      "source_location": "L67",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_components_game_drawmolebody",
+      "label": "drawMoleBody()",
+      "file_type": "code",
+      "source_file": "src/components/Game.js",
+      "source_location": "L76",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_components_game_drawhiteffects",
+      "label": "drawHitEffects()",
+      "file_type": "code",
+      "source_file": "src/components/Game.js",
+      "source_location": "L110",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_components_game_drawwronghiteffects",
+      "label": "drawWrongHitEffects()",
+      "file_type": "code",
+      "source_file": "src/components/Game.js",
+      "source_location": "L126",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_components_game_drawpauseoverlay",
+      "label": "drawPauseOverlay()",
+      "file_type": "code",
+      "source_file": "src/components/Game.js",
+      "source_location": "L142",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_components_game_game",
+      "label": "Game()",
+      "file_type": "code",
+      "source_file": "src/components/Game.js",
+      "source_location": "L157",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_components_hud",
+      "label": "HUD.js",
+      "file_type": "code",
+      "source_file": "src/components/HUD.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_components_hud_hud",
+      "label": "HUD()",
+      "file_type": "code",
+      "source_file": "src/components/HUD.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_components_menu",
+      "label": "Menu.js",
+      "file_type": "code",
+      "source_file": "src/components/Menu.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_components_menu_menu_options",
+      "label": "MENU_OPTIONS",
+      "file_type": "code",
+      "source_file": "src/components/Menu.js",
+      "source_location": "L4",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_components_menu_difficulty_options",
+      "label": "DIFFICULTY_OPTIONS",
+      "file_type": "code",
+      "source_file": "src/components/Menu.js",
+      "source_location": "L11",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_components_menu_menu",
+      "label": "Menu()",
+      "file_type": "code",
+      "source_file": "src/components/Menu.js",
+      "source_location": "L17",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_data_tamilcharacters",
+      "label": "tamilCharacters.js",
+      "file_type": "code",
+      "source_file": "src/data/tamilCharacters.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_data_tamilcharacters_vowels",
+      "label": "vowels",
+      "file_type": "code",
+      "source_file": "src/data/tamilCharacters.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_data_tamilcharacters_consonants",
+      "label": "consonants",
+      "file_type": "code",
+      "source_file": "src/data/tamilCharacters.js",
+      "source_location": "L17",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_data_tamilcharacters_compound",
+      "label": "compound",
+      "file_type": "code",
+      "source_file": "src/data/tamilCharacters.js",
+      "source_location": "L38",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_data_tamilcharacters_charactersets",
+      "label": "characterSets",
+      "file_type": "code",
+      "source_file": "src/data/tamilCharacters.js",
+      "source_location": "L74",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine",
+      "label": "engine.js",
+      "file_type": "code",
+      "source_file": "src/game/engine.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_difficulty_presets",
+      "label": "DIFFICULTY_PRESETS",
+      "file_type": "code",
+      "source_file": "src/game/engine.js",
+      "source_location": "L13",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_states",
+      "label": "STATES",
+      "file_type": "code",
+      "source_file": "src/game/engine.js",
+      "source_location": "L40",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_getholepositions",
+      "label": "getHolePositions()",
+      "file_type": "code",
+      "source_file": "src/game/engine.js",
+      "source_location": "L47",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_pickrandomcharacter",
+      "label": "pickRandomCharacter()",
+      "file_type": "code",
+      "source_file": "src/game/engine.js",
+      "source_location": "L60",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_pickdistractors",
+      "label": "pickDistractors()",
+      "file_type": "code",
+      "source_file": "src/game/engine.js",
+      "source_location": "L64",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_creategamestate",
+      "label": "createGameState()",
+      "file_type": "code",
+      "source_file": "src/game/engine.js",
+      "source_location": "L74",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_findemptyholes",
+      "label": "findEmptyHoles()",
+      "file_type": "code",
+      "source_file": "src/game/engine.js",
+      "source_location": "L110",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_allmoleshidden",
+      "label": "allMolesHidden()",
+      "file_type": "code",
+      "source_file": "src/game/engine.js",
+      "source_location": "L121",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_spawnbatch",
+      "label": "spawnBatch()",
+      "file_type": "code",
+      "source_file": "src/game/engine.js",
+      "source_location": "L125",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_easeoutcubic",
+      "label": "easeOutCubic()",
+      "file_type": "code",
+      "source_file": "src/game/engine.js",
+      "source_location": "L156",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_updatemole",
+      "label": "updateMole()",
+      "file_type": "code",
+      "source_file": "src/game/engine.js",
+      "source_location": "L160",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_updategamestate",
+      "label": "updateGameState()",
+      "file_type": "code",
+      "source_file": "src/game/engine.js",
+      "source_location": "L198",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_handleclick",
+      "label": "handleClick()",
+      "file_type": "code",
+      "source_file": "src/game/engine.js",
+      "source_location": "L231",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_test",
+      "label": "engine.test.js",
+      "file_type": "code",
+      "source_file": "src/game/engine.test.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_test_testcharacters",
+      "label": "testCharacters",
+      "file_type": "code",
+      "source_file": "src/game/engine.test.js",
+      "source_location": "L12",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_test_setupvisiblemole",
+      "label": "setupVisibleMole()",
+      "file_type": "code",
+      "source_file": "src/game/engine.test.js",
+      "source_location": "L232",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_index",
+      "label": "index.js",
+      "file_type": "code",
+      "source_file": "src/index.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_index_root",
+      "label": "root",
+      "file_type": "code",
+      "source_file": "src/index.js",
+      "source_location": "L4",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_setuptests",
+      "label": "setupTests.js",
+      "file_type": "code",
+      "source_file": "src/setupTests.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    }
+  ],
+  "edges": [
+    {
+      "source": "package",
+      "target": "package_name",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "package",
+      "target": "package_version",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "package",
+      "target": "package_private",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "package",
+      "target": "package_dependencies",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "package_dependencies",
+      "target": "package_dependencies_react",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "package_dependencies_react",
+      "target": "react",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L6",
+      "weight": 1.0,
+      "context": "import"
+    },
+    {
+      "source": "package_dependencies",
+      "target": "package_dependencies_react_dom",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "package_dependencies_react_dom",
+      "target": "react_dom",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L7",
+      "weight": 1.0,
+      "context": "import"
+    },
+    {
+      "source": "package_dependencies",
+      "target": "package_dependencies_react_scripts",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "package_dependencies_react_scripts",
+      "target": "react_scripts",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L8",
+      "weight": 1.0,
+      "context": "import"
+    },
+    {
+      "source": "package",
+      "target": "package_devdependencies",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "package_devdependencies",
+      "target": "package_devdependencies_testing_library_dom",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "package_devdependencies_testing_library_dom",
+      "target": "testing_library_dom",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L11",
+      "weight": 1.0,
+      "context": "import"
+    },
+    {
+      "source": "package_devdependencies",
+      "target": "package_devdependencies_testing_library_jest_dom",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "package_devdependencies_testing_library_jest_dom",
+      "target": "testing_library_jest_dom",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L12",
+      "weight": 1.0,
+      "context": "import"
+    },
+    {
+      "source": "package_devdependencies",
+      "target": "package_devdependencies_testing_library_react",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "package_devdependencies_testing_library_react",
+      "target": "testing_library_react",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L13",
+      "weight": 1.0,
+      "context": "import"
+    },
+    {
+      "source": "package_devdependencies",
+      "target": "package_devdependencies_testing_library_user_event",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "package_devdependencies_testing_library_user_event",
+      "target": "testing_library_user_event",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L14",
+      "weight": 1.0,
+      "context": "import"
+    },
+    {
+      "source": "package",
+      "target": "package_scripts",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L16",
+      "weight": 1.0
+    },
+    {
+      "source": "package_scripts",
+      "target": "package_scripts_start",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "package_scripts",
+      "target": "package_scripts_build",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "package_scripts",
+      "target": "package_scripts_test",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L19",
+      "weight": 1.0
+    },
+    {
+      "source": "package_scripts",
+      "target": "package_scripts_eject",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L20",
+      "weight": 1.0
+    },
+    {
+      "source": "package",
+      "target": "package_eslintconfig",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L22",
+      "weight": 1.0
+    },
+    {
+      "source": "package_eslintconfig",
+      "target": "package_eslintconfig_extends",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "package_eslintconfig_extends",
+      "target": "ref_react_app",
+      "relation": "extends",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L23",
+      "weight": 1.0,
+      "context": "import"
+    },
+    {
+      "source": "package_eslintconfig_extends",
+      "target": "ref_react_app_jest",
+      "relation": "extends",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L23",
+      "weight": 1.0,
+      "context": "import"
+    },
+    {
+      "source": "package",
+      "target": "package_browserslist",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L28",
+      "weight": 1.0
+    },
+    {
+      "source": "package_browserslist",
+      "target": "package_browserslist_production",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L29",
+      "weight": 1.0
+    },
+    {
+      "source": "package_browserslist_production",
+      "target": "ref_0_2",
+      "relation": "extends",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L29",
+      "weight": 1.0,
+      "context": "import"
+    },
+    {
+      "source": "package_browserslist_production",
+      "target": "ref_not_dead",
+      "relation": "extends",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L29",
+      "weight": 1.0,
+      "context": "import"
+    },
+    {
+      "source": "package_browserslist_production",
+      "target": "ref_not_op_mini_all",
+      "relation": "extends",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L29",
+      "weight": 1.0,
+      "context": "import"
+    },
+    {
+      "source": "package_browserslist",
+      "target": "package_browserslist_development",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L34",
+      "weight": 1.0
+    },
+    {
+      "source": "package_browserslist_development",
+      "target": "ref_last_1_chrome_version",
+      "relation": "extends",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L34",
+      "weight": 1.0,
+      "context": "import"
+    },
+    {
+      "source": "package_browserslist_development",
+      "target": "ref_last_1_firefox_version",
+      "relation": "extends",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L34",
+      "weight": 1.0,
+      "context": "import"
+    },
+    {
+      "source": "package_browserslist_development",
+      "target": "ref_last_1_safari_version",
+      "relation": "extends",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L34",
+      "weight": 1.0,
+      "context": "import"
+    },
+    {
+      "source": "public_manifest",
+      "target": "public_manifest_short_name",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/manifest.json",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "public_manifest",
+      "target": "public_manifest_name",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/manifest.json",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "public_manifest",
+      "target": "public_manifest_icons",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/manifest.json",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "public_manifest",
+      "target": "public_manifest_start_url",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/manifest.json",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "public_manifest",
+      "target": "public_manifest_display",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/manifest.json",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "public_manifest",
+      "target": "public_manifest_theme_color",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/manifest.json",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "public_manifest",
+      "target": "public_manifest_background_color",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "public/manifest.json",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app",
+      "target": "ref_react",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app",
+      "target": "src_components_menu",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.js",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app",
+      "target": "src_components_game",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.js",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app",
+      "target": "c_users_hi_is_downloads_wackamole_wackamole_src_app_css",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.js",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app",
+      "target": "src_app_loadscores",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.js",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app",
+      "target": "src_app_savescore",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.js",
+      "source_location": "L16",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app",
+      "target": "src_app_formatdate",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.js",
+      "source_location": "L25",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app",
+      "target": "src_app_app",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.js",
+      "source_location": "L30",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_savescore",
+      "target": "src_app_loadscores",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.js",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_app",
+      "target": "src_app_savescore",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.js",
+      "source_location": "L45",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_app",
+      "target": "src_app_formatdate",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.js",
+      "source_location": "L92",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_test",
+      "target": "ref_testing_library_react",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.test.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_test",
+      "target": "src_app",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.test.js",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_game",
+      "target": "ref_react",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Game.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_game",
+      "target": "src_game_engine",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Game.js",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_game",
+      "target": "src_game_engine_creategamestate",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Game.js",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_game",
+      "target": "src_game_engine_updategamestate",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Game.js",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_game",
+      "target": "src_game_engine_handleclick",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Game.js",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_game",
+      "target": "c_users_hi_is_downloads_wackamole_wackamole_src_game_engine_hole_width",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Game.js",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_game",
+      "target": "c_users_hi_is_downloads_wackamole_wackamole_src_game_engine_hole_height",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Game.js",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_game",
+      "target": "c_users_hi_is_downloads_wackamole_wackamole_src_game_engine_mole_width",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Game.js",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_game",
+      "target": "c_users_hi_is_downloads_wackamole_wackamole_src_game_engine_mole_height",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Game.js",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_game",
+      "target": "src_game_engine_states",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Game.js",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_game",
+      "target": "src_components_hud",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Game.js",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_game",
+      "target": "src_components_game_playplaceholderaudio",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Game.js",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_game",
+      "target": "src_components_game_drawbackground",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Game.js",
+      "source_location": "L28",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_game",
+      "target": "src_components_game_drawholeinteriors",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Game.js",
+      "source_location": "L53",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_game",
+      "target": "src_components_game_drawholerims",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Game.js",
+      "source_location": "L67",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_game",
+      "target": "src_components_game_drawmolebody",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Game.js",
+      "source_location": "L76",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_game",
+      "target": "src_components_game_drawhiteffects",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Game.js",
+      "source_location": "L110",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_game",
+      "target": "src_components_game_drawwronghiteffects",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Game.js",
+      "source_location": "L126",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_game",
+      "target": "src_components_game_drawpauseoverlay",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Game.js",
+      "source_location": "L142",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_game",
+      "target": "src_components_game_game",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Game.js",
+      "source_location": "L157",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_game_game",
+      "target": "src_components_game_drawbackground",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Game.js",
+      "source_location": "L199",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_game_game",
+      "target": "src_components_game_drawholeinteriors",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Game.js",
+      "source_location": "L200",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_game_game",
+      "target": "src_components_game_drawmolebody",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Game.js",
+      "source_location": "L202",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_game_game",
+      "target": "src_components_game_drawholerims",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Game.js",
+      "source_location": "L204",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_game_game",
+      "target": "src_components_game_drawhiteffects",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Game.js",
+      "source_location": "L205",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_game_game",
+      "target": "src_components_game_drawwronghiteffects",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Game.js",
+      "source_location": "L206",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_game_game",
+      "target": "src_components_game_drawpauseoverlay",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Game.js",
+      "source_location": "L207",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_game_game",
+      "target": "src_components_game_playplaceholderaudio",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Game.js",
+      "source_location": "L276",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_hud",
+      "target": "src_components_hud_hud",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/HUD.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_menu",
+      "target": "ref_react",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Menu.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_menu",
+      "target": "src_data_tamilcharacters",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Menu.js",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_menu",
+      "target": "src_data_tamilcharacters_charactersets",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Menu.js",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_menu",
+      "target": "src_components_menu_menu_options",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Menu.js",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_menu",
+      "target": "src_components_menu_difficulty_options",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Menu.js",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_menu",
+      "target": "src_components_menu_menu",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Menu.js",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "src_data_tamilcharacters",
+      "target": "src_data_tamilcharacters_vowels",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/data/tamilCharacters.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_data_tamilcharacters",
+      "target": "src_data_tamilcharacters_consonants",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/data/tamilCharacters.js",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "src_data_tamilcharacters",
+      "target": "src_data_tamilcharacters_compound",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/data/tamilCharacters.js",
+      "source_location": "L38",
+      "weight": 1.0
+    },
+    {
+      "source": "src_data_tamilcharacters",
+      "target": "src_data_tamilcharacters_charactersets",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/data/tamilCharacters.js",
+      "source_location": "L74",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_engine_difficulty_presets",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.js",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_engine_states",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.js",
+      "source_location": "L40",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_engine_getholepositions",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.js",
+      "source_location": "L47",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_engine_pickrandomcharacter",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.js",
+      "source_location": "L60",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_engine_pickdistractors",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.js",
+      "source_location": "L64",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_engine_creategamestate",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.js",
+      "source_location": "L74",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_engine_findemptyholes",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.js",
+      "source_location": "L110",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_engine_allmoleshidden",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.js",
+      "source_location": "L121",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_engine_spawnbatch",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.js",
+      "source_location": "L125",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_engine_easeoutcubic",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.js",
+      "source_location": "L156",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_engine_updatemole",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.js",
+      "source_location": "L160",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_engine_updategamestate",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.js",
+      "source_location": "L198",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_engine_handleclick",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.js",
+      "source_location": "L231",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_creategamestate",
+      "target": "src_game_engine_getholepositions",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.js",
+      "source_location": "L75",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_creategamestate",
+      "target": "src_game_engine_pickrandomcharacter",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.js",
+      "source_location": "L76",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_spawnbatch",
+      "target": "src_game_engine_allmoleshidden",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.js",
+      "source_location": "L126",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_spawnbatch",
+      "target": "src_game_engine_findemptyholes",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.js",
+      "source_location": "L128",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_spawnbatch",
+      "target": "src_game_engine_pickdistractors",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.js",
+      "source_location": "L132",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_spawnbatch",
+      "target": "src_game_engine_pickrandomcharacter",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.js",
+      "source_location": "L149",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_updatemole",
+      "target": "src_game_engine_easeoutcubic",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.js",
+      "source_location": "L165",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_updategamestate",
+      "target": "src_game_engine_spawnbatch",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.js",
+      "source_location": "L211",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_updategamestate",
+      "target": "src_game_engine_updatemole",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.js",
+      "source_location": "L218",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_handleclick",
+      "target": "src_game_engine_pickrandomcharacter",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.js",
+      "source_location": "L254",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_test",
+      "target": "src_game_engine",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.test.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_test",
+      "target": "src_game_engine_creategamestate",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.test.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_test",
+      "target": "src_game_engine_updategamestate",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.test.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_test",
+      "target": "src_game_engine_handleclick",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.test.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_test",
+      "target": "c_users_hi_is_downloads_wackamole_wackamole_src_game_engine_hole_width",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.test.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_test",
+      "target": "c_users_hi_is_downloads_wackamole_wackamole_src_game_engine_hole_height",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.test.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_test",
+      "target": "c_users_hi_is_downloads_wackamole_wackamole_src_game_engine_mole_width",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.test.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_test",
+      "target": "c_users_hi_is_downloads_wackamole_wackamole_src_game_engine_mole_height",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.test.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_test",
+      "target": "src_game_engine_states",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.test.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_test",
+      "target": "src_game_engine_test_testcharacters",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.test.js",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_test",
+      "target": "src_game_engine_test_setupvisiblemole",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.test.js",
+      "source_location": "L232",
+      "weight": 1.0
+    },
+    {
+      "source": "src_index",
+      "target": "ref_react_dom_client",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/index.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_index",
+      "target": "src_app",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/index.js",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_index",
+      "target": "src_index_root",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/index.js",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_setuptests",
+      "target": "ref_testing_library_jest_dom",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/setupTests.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app",
+      "target": "src_components_menu_menu",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.js",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app",
+      "target": "src_components_game_game",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.js",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_test",
+      "target": "src_app_app",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.test.js",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_game",
+      "target": "src_components_hud_hud",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Game.js",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "src_index",
+      "target": "src_app_app",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/index.js",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_game_game",
+      "target": "src_game_engine_updategamestate",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Game.js",
+      "source_location": "L212",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_game_game",
+      "target": "src_game_engine_creategamestate",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Game.js",
+      "source_location": "L244",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_game_game",
+      "target": "src_game_engine_handleclick",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/Game.js",
+      "source_location": "L274",
+      "weight": 1.0
+    }
+  ],
+  "input_tokens": 0,
+  "output_tokens": 0
+}
