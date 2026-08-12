@@ -1,0 +1,138 @@
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal {
+  background: #1a1a1b;
+  border: 1px solid #3a3a3c;
+  border-radius: 12px;
+  padding: 32px 28px;
+  max-width: 480px;
+  width: 90%;
+  max-height: 85vh;
+  overflow-y: auto;
+  position: relative;
+  color: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  animation: slideUp 0.25s ease;
+}
+
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: none;
+  border: none;
+  color: #818384;
+  font-size: 1.8rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 4px;
+  transition: color 0.15s;
+}
+
+.modal-close:hover {
+  color: #ffffff;
+}
+
+.modal-title {
+  margin: 0 0 4px 0;
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.modal-subtitle {
+  margin: 0 0 16px 0;
+  color: #818384;
+  font-size: 0.95rem;
+}
+
+.modal-section {
+  margin-bottom: 16px;
+}
+
+.modal-section p {
+  margin: 6px 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #d7dadc;
+}
+
+.modal-example {
+  margin-bottom: 12px;
+}
+
+.modal-example-row {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+
+.tile {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Noto Sans Tamil', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  border: 2px solid #3a3a3c;
+  background: #121213;
+  color: #ffffff;
+  border-radius: 2px;
+  box-sizing: border-box;
+}
+
+.tile--green {
+  background-color: #538d4e;
+  border-color: #538d4e;
+}
+
+.tile--lightblue {
+  background-color: #4a9eba;
+  border-color: #4a9eba;
+}
+
+.tile--yellow {
+  background-color: #b59f3b;
+  border-color: #b59f3b;
+}
+
+.tile--orange {
+  background-color: #d4770a;
+  border-color: #d4770a;
+}
+
+.tile--gray {
+  background-color: #3a3a3c;
+  border-color: #3a3a3c;
+}
+
+.modal-note {
+  font-size: 0.82rem;
+  color: #818384;
+  border-top: 1px solid #3a3a3c;
+  padding-top: 12px;
+  margin-top: 8px;
+  line-height: 1.5;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(24px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}

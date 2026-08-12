@@ -1,0 +1,155 @@
+{
+  "2": {
+    "nature": [
+      { "word": "நீர்", "pronunciation": "neer", "definition": "water" },
+      { "word": "மீன்", "pronunciation": "meen", "definition": "fish" },
+      { "word": "மான்", "pronunciation": "maan", "definition": "deer" },
+      { "word": "மேல்", "pronunciation": "mel", "definition": "above, top" },
+      { "word": "கீழ்", "pronunciation": "keezh", "definition": "below, bottom" },
+      { "word": "காய்", "pronunciation": "kaai", "definition": "vegetable; raw, unripe" }
+    ],
+    "body": [
+      { "word": "கால்", "pronunciation": "kaal", "definition": "leg, foot" },
+      { "word": "வாய்", "pronunciation": "vaai", "definition": "mouth" }
+    ],
+    "food": [
+      { "word": "பால்", "pronunciation": "paal", "definition": "milk" },
+      { "word": "நெய்", "pronunciation": "nei", "definition": "ghee, clarified butter" }
+    ],
+    "objects": [
+      { "word": "வீடு", "pronunciation": "veedu", "definition": "house, home" },
+      { "word": "வாள்", "pronunciation": "vaal", "definition": "sword" },
+      { "word": "தேர்", "pronunciation": "ther", "definition": "chariot" },
+      { "word": "கோல்", "pronunciation": "kool", "definition": "stick, staff, scepter" }
+    ],
+    "abstract": [
+      { "word": "பேர்", "pronunciation": "per", "definition": "name, fame" },
+      { "word": "நூல்", "pronunciation": "nool", "definition": "thread; book" },
+      { "word": "தீர்", "pronunciation": "theer", "definition": "solution, end, shore" }
+    ],
+    "people": [
+      { "word": "தாய்", "pronunciation": "thaai", "definition": "mother" }
+    ]
+  },
+  "3": {
+    "animals": [
+      { "word": "குதிரை", "pronunciation": "kuthirai", "definition": "horse" },
+      { "word": "அணில்", "pronunciation": "anil", "definition": "squirrel" },
+      { "word": "பறவை", "pronunciation": "paravai", "definition": "bird" },
+      { "word": "பாம்பு", "pronunciation": "paambu", "definition": "snake, serpent" }
+    ],
+    "nature": [
+      { "word": "கடல்", "pronunciation": "kadal", "definition": "ocean, sea" },
+      { "word": "நிலம்", "pronunciation": "nilam", "definition": "land, earth, ground" },
+      { "word": "குன்று", "pronunciation": "kundru", "definition": "hill, mountain" },
+      { "word": "காற்று", "pronunciation": "kaatru", "definition": "wind, air" },
+      { "word": "மரம்", "pronunciation": "maram", "definition": "tree" },
+      { "word": "நிழல்", "pronunciation": "nizhal", "definition": "shadow, shade" },
+      { "word": "குளம்", "pronunciation": "kulam", "definition": "pond, pool" }
+    ],
+    "feelings": [
+      { "word": "கோபம்", "pronunciation": "kopam", "definition": "anger, wrath, rage" },
+      { "word": "அன்பு", "pronunciation": "anbu", "definition": "love, affection, kindness" },
+      { "word": "கனவு", "pronunciation": "kanavu", "definition": "dream" },
+      { "word": "தாகம்", "pronunciation": "thaagam", "definition": "thirst; yearning" },
+      { "word": "அழகு", "pronunciation": "azhagu", "definition": "beauty, elegance" }
+    ],
+    "body": [
+      { "word": "குரல்", "pronunciation": "kural", "definition": "voice, sound" },
+      { "word": "மூக்கு", "pronunciation": "mooku", "definition": "nose" },
+      { "word": "உடல்", "pronunciation": "udal", "definition": "body" },
+      { "word": "நகம்", "pronunciation": "nagam", "definition": "nail, claw" },
+      { "word": "குருதி", "pronunciation": "kuruthi", "definition": "blood" },
+      { "word": "தொண்டை", "pronunciation": "thondai", "definition": "throat" }
+    ],
+    "people": [
+      { "word": "மகன்", "pronunciation": "magan", "definition": "son" },
+      { "word": "மகள்", "pronunciation": "magal", "definition": "daughter" },
+      { "word": "அவன்", "pronunciation": "avan", "definition": "he, that man" },
+      { "word": "அவள்", "pronunciation": "aval", "definition": "she, that woman" },
+      { "word": "அம்மா", "pronunciation": "amma", "definition": "mother" },
+      { "word": "அப்பா", "pronunciation": "appa", "definition": "father" },
+      { "word": "உறவு", "pronunciation": "uravu", "definition": "relationship, kinship" }
+    ],
+    "objects": [
+      { "word": "படம்", "pronunciation": "padam", "definition": "picture, image, painting" },
+      { "word": "உணவு", "pronunciation": "unavu", "definition": "food, meal" },
+      { "word": "கதவு", "pronunciation": "kathavu", "definition": "door, gate" },
+      { "word": "கொம்பு", "pronunciation": "kombu", "definition": "horn, antler" },
+      { "word": "சங்கு", "pronunciation": "sangu", "definition": "conch shell" },
+      { "word": "அச்சு", "pronunciation": "achu", "definition": "mold, print, stamp" },
+      { "word": "கலம்", "pronunciation": "kalam", "definition": "vessel, ship, craft" }
+    ],
+    "abstract": [
+      { "word": "அறிவு", "pronunciation": "arivu", "definition": "knowledge, wisdom, intellect" },
+      { "word": "தவம்", "pronunciation": "thavam", "definition": "penance, austerity, meditation" },
+      { "word": "அகல்", "pronunciation": "agal", "definition": "width, breadth" },
+      { "word": "அளவு", "pronunciation": "alavu", "definition": "measure, quantity, size" },
+      { "word": "முதல்", "pronunciation": "muthal", "definition": "first, beginning" },
+      { "word": "கடைசி", "pronunciation": "kadasi", "definition": "last, final, end" }
+    ],
+    "time_and_numbers": [
+      { "word": "பகல்", "pronunciation": "pagal", "definition": "day, daytime" },
+      { "word": "இரவு", "pronunciation": "iravu", "definition": "night" },
+      { "word": "ஐந்து", "pronunciation": "ainthu", "definition": "five" },
+      { "word": "மூன்று", "pronunciation": "moondru", "definition": "three" },
+      { "word": "நான்கு", "pronunciation": "naangu", "definition": "four" },
+      { "word": "கிழமை", "pronunciation": "kilamai", "definition": "week" }
+    ],
+    "culture": [
+      { "word": "தமிழ்", "pronunciation": "Tamil", "definition": "Tamil language" }
+    ]
+  },
+  "4": {
+    "nature": [
+      { "word": "பருவம்", "pronunciation": "paruvam", "definition": "season, period, youth" }
+    ],
+    "animals": [
+      { "word": "விலங்கு", "pronunciation": "vilangu", "definition": "animal, beast" },
+      { "word": "குரங்கு", "pronunciation": "kurangu", "definition": "monkey" }
+    ],
+    "people": [
+      { "word": "அரசன்", "pronunciation": "arasan", "definition": "king, ruler" },
+      { "word": "கலைஞன்", "pronunciation": "kalaingan", "definition": "artist" },
+      { "word": "இளைஞன்", "pronunciation": "ilaignan", "definition": "young man, youth" },
+      { "word": "குழந்தை", "pronunciation": "kuzhanthai", "definition": "child, baby" },
+      { "word": "தொழிலாளி", "pronunciation": "thozhilali", "definition": "worker, laborer" }
+    ],
+    "body": [
+      { "word": "கண்ணீர்", "pronunciation": "kanneer", "definition": "tears" }
+    ],
+    "objects": [
+      { "word": "நூலகம்", "pronunciation": "noolagam", "definition": "library" },
+      { "word": "கப்பல்", "pronunciation": "kappal", "definition": "ship, vessel" },
+      { "word": "அஞ்சல்", "pronunciation": "anjil", "definition": "post, mail" }
+    ],
+    "abstract": [
+      { "word": "வாழ்க்கை", "pronunciation": "vazhkkai", "definition": "life, living" },
+      { "word": "புரிதல்", "pronunciation": "purithal", "definition": "understanding, comprehension" }
+    ]
+  },
+  "5": {
+    "people": [
+      { "word": "ஆசிரியர்", "pronunciation": "aasiriyar", "definition": "teacher" }
+    ],
+    "objects": [
+      { "word": "புத்தகம்", "pronunciation": "puththagam", "definition": "book" },
+      { "word": "கட்டிடம்", "pronunciation": "kattidam", "definition": "building, structure" },
+      { "word": "சுவரொட்டி", "pronunciation": "suvarotti", "definition": "poster, wall poster" }
+    ],
+    "culture": [
+      { "word": "வணக்கம்", "pronunciation": "vanakkam", "definition": "greeting, hello" },
+      { "word": "சங்கீதம்", "pronunciation": "sangeetham", "definition": "music" },
+      { "word": "மந்திரம்", "pronunciation": "manthiram", "definition": "magic, spell, mantra" }
+    ],
+    "feelings": [
+      { "word": "சந்தோஷம்", "pronunciation": "sandhosham", "definition": "happiness, joy" },
+      { "word": "மகிழ்ச்சி", "pronunciation": "magilchi", "definition": "joy, delight, pleasure" }
+    ],
+    "abstract": [
+      { "word": "வியாபாரம்", "pronunciation": "viyabaram", "definition": "business, trade, commerce" },
+      { "word": "குடியரசு", "pronunciation": "kudiyaratchu", "definition": "republic" },
+      { "word": "நிர்வாகம்", "pronunciation": "nirvaagam", "definition": "administration, management" }
+    ]
+  }
+}
