@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
+<title>இடச்சொல் தோட்டம் — Tamil Postpositions Game</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Thambi+2:wght@500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --sky-top:#FFF3D2;
+    --sky-bottom:#FFD874;
+    --ground:#3E7A4C;
+    --ground-dark:#2C5A38;
+    --ground-darker:#1F4227;
+    --ivory:#FFF9EE;
+    --ivory-dim:#F5ECD8;
+    --indigo:#2B3768;
+    --indigo-soft:#4A5590;
+    --vermilion:#C0392B;
+    --vermilion-soft:#E0665A;
+    --gold:#E8A33D;
+    --gold-soft:#F4C877;
+    --leaf:#2E6B44;
+    --shadow: 0 10px 24px rgba(43,55,104,0.18);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Poppins',sans-serif;
+    background: radial-gradient(circle at 50% 0%, var(--sky-top), var(--sky-bottom) 60%, #F2B85E 100%);
+    min-height:100vh;
+    color:var(--indigo);
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior:none;
+  }
+  .tamil{ font-family:'Baloo Thambi 2', 'Poppins', sans-serif; }
+
+  #error-overlay{
+    display:none; position:fixed; inset:0; background:#3a0d0d; color:#ffdede;
+    font-family:monospace; padding:20px; z-index:99999; overflow:auto; white-space:pre-wrap;
+  }
+
+  .app{
+    max-width:600px;
+    margin:0 auto;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    padding: 14px 14px 28px;
+  }
+
+  /* ---------- Header ---------- */
+  .topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:10px;
+  }
+  .brand{
+    display:flex; align-items:center; gap:8px;
+  }
+  .brand-emoji{ font-size:28px; filter:drop-shadow(0 2px 2px rgba(0,0,0,0.15)); }
+  .brand-text .tamil{ font-size:20px; font-weight:800; color:var(--indigo); line-height:1; }
+  .brand-text .sub{ font-size:10px; color:var(--indigo-soft); letter-spacing:0.5px; }
+
+  .stat-pill{
+    background:var(--ivory);
+    border-radius:999px;
+    padding:6px 12px;
+    box-shadow: var(--shadow);
+    display:flex; align-items:center; gap:6px;
+    font-weight:700;
+    font-size:14px;
+  }
+  .stat-row{ display:flex; gap:8px; }
+
+  /* ---------- Progress dots ---------- */
+  .progress-track{
+    display:flex; gap:5px; flex-wrap:wrap; justify-content:center;
+    margin: 4px 0 12px;
+  }
+  .progress-dot{
+    width:10px; height:10px; border-radius:50%;
+    background: rgba(43,55,104,0.18);
+    transition: all .25s ease;
+  }
+  .progress-dot.done-perfect{ background: var(--leaf); }
+  .progress-dot.done-retry{ background: var(--gold); }
+  .progress-dot.current{ background: var(--vermilion); transform:scale(1.3); }
+
+  /* ---------- Kolam divider ---------- */
+  .kolam-strip{ display:block; width:100%; height:22px; margin:6px 0; }
+
+  /* ---------- Cards ---------- */
+  .card{
+    background: var(--ivory);
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    padding: 16px 18px;
+  }
+
+  /* ---------- Title screen ---------- */
+  .title-screen{
+    display:flex; flex-direction:column; align-items:center; text-align:center;
+    gap:14px; flex:1; justify-content:center; padding: 10px 4px;
+  }
+  .title-hero{ font-size:64px; line-height:1; margin-bottom:-4px; }
+  .title-tamil{
+    font-size: clamp(30px, 8vw, 42px); font-weight:800; color:var(--indigo);
+    text-shadow: 0 2px 0 rgba(255,255,255,0.5);
+  }
+  .title-sub{ font-size:15px; color:var(--indigo-soft); font-weight:600; max-width:380px; }
+  .howto{
+    background:var(--ivory); border-radius:18px; box-shadow:var(--shadow);
+    padding:16px 18px; max-width:400px; text-align:left; font-size:14px; line-height:1.6;
+  }
+  .howto b{ color:var(--vermilion); }
+  .start-btn{
+    margin-top:6px;
+    background: linear-gradient(180deg, var(--vermilion-soft), var(--vermilion));
+    color:white; border:none; border-radius:999px;
+    padding:16px 40px; font-size:19px; font-weight:800;
+    font-family:'Baloo Thambi 2', sans-serif;
+    box-shadow: 0 8px 0 #8B2A20, 0 10px 20px rgba(192,57,43,0.35);
+    cursor:pointer; transition: transform .08s ease;
+  }
+  .start-btn:active{ transform: translateY(6px); box-shadow: 0 2px 0 #8B2A20; }
+
+  /* ---------- Sentence card ---------- */
+  .sentence-card{ position:relative; margin-bottom:10px; }
+  .scene-label{
+    font-size:11px; font-weight:700; letter-spacing:0.5px; color:var(--indigo-soft);
+    text-transform:uppercase; margin-bottom:4px; display:flex; align-items:center; gap:6px;
+  }
+  .sentence-tamil{
+    font-size: clamp(22px, 6.5vw, 28px); font-weight:700; color:var(--indigo); line-height:1.35;
+  }
+  .sentence-tamil .target-word{ color:var(--vermilion); }
+  .reveal-row{ display:flex; align-items:center; gap:8px; margin-top:8px; flex-wrap:wrap; }
+  .hint-btn{
+    background:var(--ivory-dim); border:1.5px dashed var(--indigo-soft); border-radius:12px;
+    padding:5px 12px; font-size:12.5px; font-weight:600; color:var(--indigo-soft);
+    cursor:pointer; font-family:'Poppins',sans-serif;
+  }
+  .translit-line{ font-size:13px; color:var(--indigo-soft); font-style:italic; }
+  .english-line{ font-size:13px; color:#7a6a45; font-weight:600; }
+
+  /* ---------- Stage ---------- */
+  .stage-wrap{ margin-top:12px; border-radius:22px; overflow:hidden; box-shadow: var(--shadow); position:relative; }
+  .stage{
+    position:relative;
+    width:100%;
+    aspect-ratio: 3 / 2.15;
+    background: linear-gradient(180deg, #FDEFC8 0%, #FBE2A0 38%, var(--ground) 40%, var(--ground-dark) 78%, var(--ground-darker) 100%);
+    overflow:hidden;
+    touch-action:none;
+  }
+  .sun{
+    position:absolute; top:6%; right:8%; width:13%; aspect-ratio:1; border-radius:50%;
+    background: radial-gradient(circle at 35% 30%, #FFF3C4, var(--gold) 70%);
+    box-shadow: 0 0 24px rgba(232,163,61,0.6);
+  }
+  .cloud{ position:absolute; opacity:0.85; }
+
+  .stage-caption{
+    position:absolute; top:6px; left:8px; right:8px; z-index:20;
+    font-size:11.5px; color:#4a3b1e; font-weight:600;
+    background:rgba(255,249,238,0.72); backdrop-filter:blur(2px);
+    padding:3px 8px; border-radius:10px; display:inline-block; width:fit-content;
+  }
+
+  .landmark{
+    position:absolute; transform:translate(-50%,-50%);
+    display:flex; flex-direction:column; align-items:center;
+    pointer-events:none; user-select:none;
+  }
+  .landmark-emoji{ filter:drop-shadow(0 4px 3px rgba(0,0,0,0.25)); }
+  .landmark-tag{
+    margin-top:2px; font-size:10px; font-weight:700; color:var(--indigo);
+    background:rgba(255,249,238,0.85); padding:1px 6px; border-radius:8px;
+  }
+
+  /* box drawing */
+  .box-shape{
+    position:absolute; transform:translate(-50%,-50%);
+    width:26%; aspect-ratio:1.3/1;
+  }
+  .box-shape .lid{
+    position:absolute; top:0; left:0; right:0; height:34%;
+    background: linear-gradient(180deg,#C98A4B,#A8672E);
+    border-radius:4px 4px 0 0;
+    box-shadow: inset 0 -3px 0 rgba(0,0,0,0.15);
+  }
+  .box-shape .body{
+    position:absolute; bottom:0; left:0; right:0; height:70%;
+    background: linear-gradient(180deg,#B3763B,#8C5726);
+    border-radius:0 0 6px 6px;
+    box-shadow: inset 0 4px 8px rgba(0,0,0,0.25), 0 6px 8px rgba(0,0,0,0.28);
+  }
+  .box-shape .tape{
+    position:absolute; left:47%; top:0; width:6%; height:100%; background:#EAD9A8; opacity:0.85;
+  }
+
+  .house-shape{ position:absolute; transform:translate(-50%,-50%); width:30%; }
+  .house-shape .roof{
+    width:0; height:0; margin:0 auto;
+    border-left: 15vw solid transparent; border-right: 15vw solid transparent;
+    max-width:90px; max-height:60px;
+    border-bottom: 44px solid var(--vermilion);
+    filter:drop-shadow(0 3px 2px rgba(0,0,0,0.2));
+  }
+  .house-shape .wall{
+    width:100%; height:38px; background: linear-gradient(180deg,#F4E0B8,#E3C88E);
+    box-shadow: inset 0 -6px 8px rgba(0,0,0,0.12), 0 5px 6px rgba(0,0,0,0.25);
+    position:relative; border-radius:0 0 3px 3px;
+  }
+  .house-shape .door{
+    position:absolute; bottom:0; left:50%; transform:translateX(-50%);
+    width:26%; height:78%; background: linear-gradient(180deg,#7A4A26,#5E3719);
+    border-radius:6px 6px 0 0;
+  }
+
+  .boundary-ring{
+    position:absolute; border:3px dashed rgba(255,249,238,0.55); border-radius:50%;
+    transform:translate(-50%,-50%); pointer-events:none;
+  }
+
+  .diff-badge{
+    display:inline-flex; align-items:center; gap:4px;
+    font-size:11px; font-weight:700; padding:2px 9px; border-radius:999px;
+    margin-left:6px;
+  }
+  .diff-badge.lvl1{ background:#E1F3E4; color:#276B39; }
+  .diff-badge.lvl2{ background:#FBEACB; color:#8A5A16; }
+  .diff-badge.lvl3{ background:#FADAD6; color:#A3291D; }
+
+  .progress-dot.group-start{ margin-left:8px; }
+
+  .zone{
+    position:absolute; transform:translate(-50%,-50%);
+    border-radius:50%;
+    border:2.5px dashed rgba(255,249,238,0.55);
+    background: rgba(255,249,238,0.12);
+    transition: all .18s ease;
+  }
+  .zone.glow-correct{ border-color:#8CE29A; background:rgba(140,226,154,0.35); box-shadow:0 0 18px rgba(140,226,154,0.7); }
+  .zone.glow-wrong{ border-color:#FF9C8B; background:rgba(255,120,100,0.28); }
+  .zone.hint-pulse{ animation: pulseZone 1s ease-in-out infinite; border-color: var(--gold); }
+  @keyframes pulseZone{
+    0%,100%{ box-shadow:0 0 0 rgba(232,163,61,0); }
+    50%{ box-shadow:0 0 20px rgba(232,163,61,0.85); }
+  }
+
+  .dock{
+    position:absolute; transform:translate(-50%,-50%);
+    width:15%; aspect-ratio:1;
+    border-radius:50%;
+    border:2.5px dotted rgba(255,249,238,0.6);
+    display:flex; align-items:center; justify-content:center;
+    font-size:13px;
+  }
+
+  .character{
+    position:absolute;
+    width:15%;
+    aspect-ratio:1;
+    transform:translate(-50%,-50%);
+    display:flex; align-items:center; justify-content:center;
+    font-size: clamp(26px, 8.5vw, 40px);
+    cursor:grab;
+    filter:drop-shadow(0 4px 4px rgba(0,0,0,0.3));
+    touch-action:none;
+    user-select:none;
+    transition: filter .15s ease;
+  }
+  .character.dragging{ cursor:grabbing; filter:drop-shadow(0 10px 8px rgba(0,0,0,0.35)); z-index:50 !important; }
+  .character.settle{ transition: top .35s cubic-bezier(.34,1.56,.64,1), left .35s cubic-bezier(.34,1.56,.64,1); }
+  .character.shake{ animation: shakeAnim .4s ease; }
+  @keyframes shakeAnim{
+    0%,100%{ transform:translate(-50%,-50%) rotate(0); }
+    25%{ transform:translate(-50%,-50%) rotate(-10deg); }
+    75%{ transform:translate(-50%,-50%) rotate(10deg); }
+  }
+
+  /* ---------- Feedback banner ---------- */
+  .feedback-banner{
+    margin-top:10px; text-align:center; min-height:30px;
+    font-weight:700; font-size:15px; font-family:'Baloo Thambi 2', sans-serif;
+    transition: opacity .2s ease;
+  }
+  .feedback-banner.correct{ color:#276B39; }
+  .feedback-banner.wrong{ color:var(--vermilion); }
+  .learned-chip{
+    display:inline-flex; align-items:center; gap:8px;
+    background: var(--ivory); border:2px solid #8CE29A; border-radius:14px;
+    padding:6px 14px; margin-top:6px; box-shadow:var(--shadow);
+  }
+  .learned-chip .tamil{ font-size:18px; color:var(--indigo); font-weight:800; }
+  .learned-chip .meaning{ font-size:12px; color:var(--indigo-soft); font-weight:600; }
+
+  /* ---------- Bottom controls ---------- */
+  .bottom-row{ display:flex; gap:8px; margin-top:12px; }
+  .ghost-btn{
+    flex:1; background:var(--ivory); border:none; border-radius:14px;
+    padding:11px; font-weight:700; font-size:13.5px; color:var(--indigo);
+    box-shadow: var(--shadow); cursor:pointer; font-family:'Poppins',sans-serif;
+    display:flex; align-items:center; justify-content:center; gap:6px;
+  }
+
+  /* ---------- Word list modal ---------- */
+  .modal-backdrop{
+    position:fixed; inset:0; background:rgba(43,55,104,0.45);
+    display:flex; align-items:flex-end; justify-content:center; z-index:200;
+    padding:0;
+  }
+  .modal-sheet{
+    background:var(--ivory); width:100%; max-width:600px; border-radius:22px 22px 0 0;
+    padding:18px 18px 26px; max-height:78vh; overflow-y:auto;
+    box-shadow: 0 -10px 30px rgba(0,0,0,0.25);
+  }
+  .modal-title{ font-family:'Baloo Thambi 2',sans-serif; font-size:20px; font-weight:800; color:var(--indigo); margin-bottom:10px; }
+  .word-row{
+    display:flex; align-items:center; gap:12px; padding:9px 0; border-bottom:1px solid rgba(43,55,104,0.1);
+  }
+  .word-emoji{ font-size:22px; width:30px; text-align:center; }
+  .word-tamil{ font-size:19px; font-weight:800; color:var(--indigo); min-width:88px; }
+  .word-translit{ font-size:12px; color:var(--indigo-soft); font-style:italic; }
+  .word-eng{ font-size:12px; color:#7a6a45; font-weight:600; margin-left:auto; text-align:right; }
+  .close-modal{
+    display:block; margin:14px auto 0; background:var(--indigo); color:white; border:none;
+    padding:10px 26px; border-radius:999px; font-weight:700; cursor:pointer;
+  }
+
+  /* ---------- Summary screen ---------- */
+  .summary-screen{ display:flex; flex-direction:column; align-items:center; text-align:center; gap:10px; flex:1; justify-content:center; }
+  .stars{ font-size:44px; letter-spacing:6px; }
+  .summary-score{ font-size:34px; font-weight:800; color:var(--indigo); font-family:'Baloo Thambi 2',sans-serif; }
+  .summary-sub{ font-size:14px; color:var(--indigo-soft); font-weight:600; }
+  .recap-grid{
+    display:grid; grid-template-columns: 1fr 1fr; gap:8px; width:100%; max-width:420px; margin-top:8px;
+  }
+  .recap-item{
+    background:var(--ivory); border-radius:14px; padding:8px 10px; text-align:left;
+    box-shadow:var(--shadow); display:flex; align-items:center; gap:8px;
+  }
+  .recap-item .tamil{ font-size:15px; font-weight:800; color:var(--indigo); }
+  .recap-item .eng{ font-size:10.5px; color:var(--indigo-soft); font-weight:600; }
+
+  @media (max-width:380px){
+    .recap-grid{ grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div id="error-overlay"></div>
+<div id="root"></div>
+
+<script>
+  window.onerror = function(msg, url, line, col, err){
+    var el = document.getElementById('error-overlay');
+    el.style.display = 'block';
+    el.textContent = 'Error: ' + msg + '\nLine ' + line + ':' + col + '\n' + (err && err.stack ? err.stack : '');
+  };
+</script>
+
+<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.24.7/babel.min.js"></script>
+
+<script type="text/babel" data-presets="react" data-type="module">
+"use strict";
+const { useState, useRef, useEffect, useCallback, useMemo } = React;
+
+/* ============================================================
+   DATA
+   ============================================================ */
+
+const POST = {
+  mele:    { tamil:'மேலே',    translit:'mēlē',      english:'on top of / above' },
+  keezhe:  { tamil:'கீழே',    translit:'kīzhē',      english:'under / below' },
+  ulle:    { tamil:'உள்ளே',   translit:'uḷḷē',       english:'inside' },
+  velye:   { tamil:'வெளியே',  translit:'veḷiyē',     english:'outside' },
+  munnal:  { tamil:'முன்னால்', translit:'muṉṉāl',    english:'in front of' },
+  pinnal:  { tamil:'பின்னால்', translit:'piṉṉāl',    english:'behind' },
+  arugil:  { tamil:'அருகில்',  translit:'arukil',    english:'near / beside' },
+  idaiyil: { tamil:'இடையில்',  translit:'iṭaiyil',   english:'between' },
+};
+
+// zone layout coordinates are % of stage width/height.
+// Each zone carries 3 sentence "variants" (difficulty levels) so the
+// same spot can be asked about with simple, medium, or richer Tamil.
+//
+// Zones are grouped so that no two zones in the same scene are
+// conceptually fuzzy about which one a sentence means:
+//  - box    = a pure "container" set: on top / inside / under / away-from
+//  - house  = a pure "direction" set: front / back / on-the-roof
+//  - trees  = between (needs both trees) / near (just one tree)
+const SCENES = {
+  box: {
+    id:'box',
+    caption: '🎁 பெட்டியுடன் குட்டி பூனையின் விளையாட்டு!',
+    dock: { left:88, top:10 },
+    zones: [
+      { key:'mele', left:50, top:24, radius:7, variants:[
+        { level:1, pre:'பூனை பெட்டியின் ', target:'மேலே', post:' இருக்கிறது.',
+          translit:'Pūṉai peṭṭiyiṉ mēlē irukkiṟatu.', english:'The cat is on top of the box.' },
+        { level:2, pre:'பூனையை பெட்டியின் ', target:'மேலே', post:' வை!',
+          translit:'Pūṉaiyai peṭṭiyiṉ mēlē vai!', english:'Put the cat on top of the box!' },
+        { level:3, pre:'குட்டி பூனை பழைய பெட்டியின் ', target:'மேலே', post:' உட்கார்ந்திருக்கிறது.',
+          translit:'Kuṭṭi pūṉai pazhaiya peṭṭiyiṉ mēlē uṭkārntirukkiṟatu.', english:'The kitten is sitting on top of the old box.' },
+      ]},
+      { key:'ulle', left:50, top:50, radius:9, variants:[
+        { level:1, pre:'பூனை பெட்டியின் ', target:'உள்ளே', post:' இருக்கிறது.',
+          translit:'Pūṉai peṭṭiyiṉ uḷḷē irukkiṟatu.', english:'The cat is inside the box.' },
+        { level:2, pre:'பூனையை பெட்டியின் ', target:'உள்ளே', post:' வை!',
+          translit:'Pūṉaiyai peṭṭiyiṉ uḷḷē vai!', english:'Put the cat inside the box!' },
+        { level:3, pre:'குட்டி பூனை பெட்டியின் ', target:'உள்ளே', post:' ஒளிந்திருக்கிறது.',
+          translit:'Kuṭṭi pūṉai peṭṭiyiṉ uḷḷē oḷintirukkiṟatu.', english:'The kitten is hiding inside the box.' },
+      ]},
+      { key:'keezhe', left:50, top:76, radius:7, variants:[
+        { level:1, pre:'பூனை பெட்டியின் ', target:'கீழே', post:' இருக்கிறது.',
+          translit:'Pūṉai peṭṭiyiṉ kīzhē irukkiṟatu.', english:'The cat is under the box.' },
+        { level:2, pre:'பூனையை பெட்டியின் ', target:'கீழே', post:' வை!',
+          translit:'Pūṉaiyai peṭṭiyiṉ kīzhē vai!', english:'Put the cat under the box!' },
+        { level:3, pre:'சோம்பேறி பூனை பெட்டியின் ', target:'கீழே', post:' தூங்குகிறது.',
+          translit:'Sōmpēṟi pūṉai peṭṭiyiṉ kīzhē tūńkukiṟatu.', english:'The lazy cat is sleeping under the box.' },
+      ]},
+      { key:'velye', left:15, top:85, radius:9, variants:[
+        { level:1, pre:'பூனை பெட்டியின் ', target:'வெளியே', post:' இருக்கிறது.',
+          translit:'Pūṉai peṭṭiyiṉ veḷiyē irukkiṟatu.', english:'The cat is outside the box.' },
+        { level:2, pre:'பூனையை பெட்டிக்கு ', target:'வெளியே', post:' வை!',
+          translit:'Pūṉaiyai peṭṭikku veḷiyē vai!', english:'Put the cat outside the box!' },
+        { level:3, pre:'குட்டி பூனை பெட்டிக்கு ', target:'வெளியே', post:' நிற்கிறது.',
+          translit:'Kuṭṭi pūṉai peṭṭikku veḷiyē niṟkiṟatu.', english:'The kitten is standing outside the box.' },
+      ]},
+    ],
+  },
+  house: {
+    id:'house',
+    caption: '🏠 இது குட்டி பூனையின் வீடு!',
+    dock: { left:14, top:10 },
+    zones: [
+      { key:'mele_roof', left:50, top:16, radius:8, variants:[
+        { level:1, pre:'பூனை வீட்டின் ', target:'மேலே', post:' இருக்கிறது.',
+          translit:'Pūṉai vīṭṭiṉ mēlē irukkiṟatu.', english:'The cat is on top of the house (on the roof).' },
+        { level:2, pre:'பூனையை வீட்டின் ', target:'மேலே', post:' வை!',
+          translit:'Pūṉaiyai vīṭṭiṉ mēlē vai!', english:'Put the cat on the roof!' },
+        { level:3, pre:'குட்டி பூனை கூரையின் ', target:'மேலே', post:' நடக்கிறது.',
+          translit:'Kuṭṭi pūṉai kūraiyiṉ mēlē naṭakkiṟatu.', english:'The kitten is walking on top of the roof.' },
+      ]},
+      { key:'pinnal', left:50, top:50, radius:9, variants:[
+        { level:1, pre:'பூனை வீட்டின் ', target:'பின்னால்', post:' இருக்கிறது.',
+          translit:'Pūṉai vīṭṭiṉ piṉṉāl irukkiṟatu.', english:'The cat is behind the house.' },
+        { level:2, pre:'பூனையை வீட்டின் ', target:'பின்னால்', post:' வை!',
+          translit:'Pūṉaiyai vīṭṭiṉ piṉṉāl vai!', english:'Put the cat behind the house!' },
+        { level:3, pre:'குட்டி பூனை வீட்டின் ', target:'பின்னால்', post:' ஒளிந்திருக்கிறது.',
+          translit:'Kuṭṭi pūṉai vīṭṭiṉ piṉṉāl oḷintirukkiṟatu.', english:'The kitten is hiding behind the house.' },
+      ]},
+      { key:'munnal', left:50, top:84, radius:13, variants:[
+        { level:1, pre:'பூனை வீட்டின் ', target:'முன்னால்', post:' இருக்கிறது.',
+          translit:'Pūṉai vīṭṭiṉ muṉṉāl irukkiṟatu.', english:'The cat is in front of the house.' },
+        { level:2, pre:'பூனையை வீட்டின் ', target:'முன்னால்', post:' வை!',
+          translit:'Pūṉaiyai vīṭṭiṉ muṉṉāl vai!', english:'Put the cat in front of the house!' },
+        { level:3, pre:'குட்டி பூனை பெரிய வீட்டின் ', target:'முன்னால்', post:' விளையாடுகிறது.',
+          translit:'Kuṭṭi pūṉai periya vīṭṭiṉ muṉṉāl viḷaiyāṭukiṟatu.', english:'The kitten is playing in front of the big house.' },
+      ]},
+    ],
+  },
+  trees: {
+    id:'trees',
+    caption: '🌳🌳 தோட்டத்தில் இரண்டு மரங்கள் நிற்கின்றன.',
+    dock: { left:78, top:90 },
+    zones: [
+      { key:'idaiyil', left:50, top:56, radius:13, variants:[
+        { level:1, pre:'பூனை மரங்களுக்கு ', target:'இடையில்', post:' இருக்கிறது.',
+          translit:'Pūṉai marańkaḷukku iṭaiyil irukkiṟatu.', english:'The cat is between the trees.' },
+        { level:2, pre:'பூனையை மரங்களுக்கு ', target:'இடையில்', post:' வை!',
+          translit:'Pūṉaiyai marańkaḷukku iṭaiyil vai!', english:'Put the cat between the trees!' },
+        { level:3, pre:'குட்டி பூனை இரண்டு உயரமான மரங்களுக்கு ', target:'இடையில்', post:' நிற்கிறது.',
+          translit:'Kuṭṭi pūṉai iraṇṭu uyaramāṉa marańkaḷukku iṭaiyil niṟkiṟatu.', english:'The kitten is standing between the two tall trees.' },
+      ]},
+      { key:'arugil', left:22, top:78, radius:13, variants:[
+        { level:1, pre:'பூனை மரத்திற்கு ', target:'அருகில்', post:' இருக்கிறது.',
+          translit:'Pūṉai marattiṟku arukil irukkiṟatu.', english:'The cat is near the tree.' },
+        { level:2, pre:'பூனையை மரத்திற்கு ', target:'அருகில்', post:' வை!',
+          translit:'Pūṉaiyai marattiṟku arukil vai!', english:'Put the cat near the tree!' },
+        { level:3, pre:'குட்டி பூனை உயரமான மரத்திற்கு ', target:'அருகில்', post:' உட்கார்ந்திருக்கிறது.',
+          translit:'Kuṭṭi pūṉai uyaramāṉa marattiṟku arukil uṭkārntirukkiṟatu.', english:'The kitten is sitting near the tall tree.' },
+      ]},
+    ],
+  },
+};
+
+const DIFF_LABEL = { 1:'எளிது', 2:'நடுத்தரம்', 3:'கடினம்' };
+
+const CORRECT_MSGS = ['மிகச் சரி! 🎉','அருமை! 🌟','சூப்பர்! ✨','சரியான இடம்! 🥳','வாழ்த்துக்கள்! 👏'];
+const WRONG_MSGS = ['இல்லை, முயற்சி செய்! 🙂','கொஞ்சம் தவறு... மீண்டும்!','அது சரியில்லை, மீண்டும் முயலு!','இல்லை, வேறு இடம்!'];
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+// Builds a progression: every zone at level 1 (simple state sentences),
+// then every zone again at level 2 (imperative + correct case forms),
+// then a shuffled challenge set of 5 at level 3 (richer vocabulary).
+function buildRounds(){
+  const allZones = [];
+  Object.values(SCENES).forEach(scene=>{
+    scene.zones.forEach(z=> allZones.push({ sceneId: scene.id, zoneKey: z.key }));
+  });
+  const level1 = shuffle(allZones).map(r=>({ ...r, level:1 }));
+  const level2 = shuffle(allZones).map(r=>({ ...r, level:2 }));
+  const level3 = shuffle(allZones).slice(0,5).map(r=>({ ...r, level:3 }));
+  return level1.concat(level2, level3);
+}
+
+function getZoneDef(sceneId, zoneKey){
+  return SCENES[sceneId].zones.find(z=>z.key===zoneKey);
+}
+function getVariant(sceneId, zoneKey, level){
+  const z = getZoneDef(sceneId, zoneKey);
+  return z.variants.find(v=>v.level===level) || z.variants[0];
+}
+
+/* ============================================================
+   SOUND (tiny, asset-free)
+   ============================================================ */
+let audioCtx = null;
+function beep(type){
+  try{
+    if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const ctx = audioCtx;
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    if(type==='correct'){
+      osc.frequency.setValueAtTime(523, now);
+      osc.frequency.linearRampToValueAtTime(784, now+0.14);
+      gain.gain.setValueAtTime(0.08, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now+0.28);
+      osc.start(now); osc.stop(now+0.3);
+    } else {
+      osc.frequency.setValueAtTime(220, now);
+      osc.frequency.linearRampToValueAtTime(160, now+0.18);
+      gain.gain.setValueAtTime(0.07, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now+0.22);
+      osc.start(now); osc.stop(now+0.24);
+    }
+  }catch(e){ /* audio not available, ignore */ }
+}
+
+/* ============================================================
+   KOLAM DIVIDER (signature decorative motif)
+   ============================================================ */
+function KolamStrip({ color = '#C0392B', dotColor = '#E8A33D', count = 7 }){
+  const w = 300, h = 22;
+  const spacing = w / (count+1);
+  const dots = [];
+  const loops = [];
+  for(let i=1;i<=count;i++){
+    const x = i*spacing;
+    dots.push(<circle key={'d'+i} cx={x} cy={h/2} r="2" fill={dotColor} />);
+    if(i < count){
+      const x2 = (i+1)*spacing;
+      const midX = (x+x2)/2;
+      loops.push(
+        <path key={'l'+i}
+          d={`M ${x} ${h/2} Q ${midX} ${h*0.05} ${x2} ${h/2} Q ${midX} ${h*0.95} ${x} ${h/2}`}
+          fill="none" stroke={color} strokeWidth="1.4" opacity="0.55" />
+      );
+    }
+  }
+  return (
+    <svg className="kolam-strip" viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none">
+      {loops}
+      {dots}
+    </svg>
+  );
+}
+
+/* ============================================================
+   SCENE ARTWORK
+   ============================================================ */
+function SceneArt({ sceneId }){
+  if(sceneId === 'box'){
+    return (
+      <React.Fragment>
+        <div className="boundary-ring" style={{ left:'50%', top:'50%', width:'46%', aspectRatio:'1' }}></div>
+        <div className="box-shape" style={{ left:'50%', top:'50%' }}>
+          <div className="body"></div>
+          <div className="tape"></div>
+          <div className="lid"></div>
+        </div>
+      </React.Fragment>
+    );
+  }
+  if(sceneId === 'house'){
+    return (
+      <div className="house-shape" style={{ left:'50%', top:'55%', zIndex:5 }}>
+        <div className="roof"></div>
+        <div className="wall"><div className="door"></div></div>
+      </div>
+    );
+  }
+  if(sceneId === 'trees'){
+    return (
+      <React.Fragment>
+        <div className="landmark" style={{ left:'22%', top:'54%', fontSize:'clamp(34px,11vw,54px)' }}>
+          <div className="landmark-emoji">🌳</div>
+        </div>
+        <div className="landmark" style={{ left:'78%', top:'54%', fontSize:'clamp(34px,11vw,54px)' }}>
+          <div className="landmark-emoji">🌳</div>
+        </div>
+      </React.Fragment>
+    );
+  }
+  return null;
+}
+
+/* ============================================================
+   MAIN APP
+   ============================================================ */
+function App(){
+  const [screen, setScreen] = useState('title'); // title | play | summary
+  const [rounds, setRounds] = useState([]);
+  const [roundIdx, setRoundIdx] = useState(0);
+  const [score, setScore] = useState(0);
+  const [streak, setStreak] = useState(0);
+  const [bestStreak, setBestStreak] = useState(0);
+  const [attempts, setAttempts] = useState(0);
+  const [roundResults, setRoundResults] = useState([]); // 'perfect' | 'retry' per finished round
+  const [feedback, setFeedback] = useState(null); // {type, msg, learned}
+  const [showWordList, setShowWordList] = useState(false);
+  const [revealHint, setRevealHint] = useState(false);
+  const [zoneFlash, setZoneFlash] = useState({}); // key -> 'correct'|'wrong'
+  const [showZoneHintKey, setShowZoneHintKey] = useState(null);
+
+  const stageRef = useRef(null);
+  const [charPos, setCharPos] = useState({ left:12, top:88 });
+  const [dragging, setDragging] = useState(false);
+  const [settling, setSettling] = useState(false);
+  const [shaking, setShaking] = useState(false);
+  const dragInfo = useRef(null);
+  const advanceTimer = useRef(null);
+
+  const currentRound = rounds[roundIdx];
+  const scene = currentRound ? SCENES[currentRound.sceneId] : null;
+  const zoneData = currentRound ? getZoneDef(currentRound.sceneId, currentRound.zoneKey) : null;
+  const variant = currentRound ? getVariant(currentRound.sceneId, currentRound.zoneKey, currentRound.level) : null;
+  const totalRounds = rounds.length;
+  const maxScore = useMemo(()=> rounds.reduce((s,r)=> s + r.level*10, 0), [rounds]);
+
+  const startGame = () => {
+    const r = buildRounds();
+    setRounds(r);
+    setRoundIdx(0);
+    setScore(0);
+    setStreak(0);
+    setBestStreak(0);
+    setAttempts(0);
+    setRoundResults([]);
+    setFeedback(null);
+    setRevealHint(false);
+    setShowZoneHintKey(null);
+    setZoneFlash({});
+    if(r.length){
+      setCharPos({ left: SCENES[r[0].sceneId].dock.left, top: SCENES[r[0].sceneId].dock.top });
+    }
+    setScreen('play');
+  };
+
+  const goToRound = (idx, list) => {
+    const src = list || rounds;
+    if(idx >= src.length){
+      setScreen('summary');
+      return;
+    }
+    setRoundIdx(idx);
+    setAttempts(0);
+    setFeedback(null);
+    setRevealHint(false);
+    setShowZoneHintKey(null);
+    setZoneFlash({});
+    setSettling(true);
+    setCharPos({ left: SCENES[src[idx].sceneId].dock.left, top: SCENES[src[idx].sceneId].dock.top });
+    setTimeout(()=>setSettling(false), 380);
+  };
+
+  useEffect(()=>{
+    return () => { if(advanceTimer.current) clearTimeout(advanceTimer.current); };
+  }, []);
+
+  const handlePointerDown = (e) => {
+    if(!currentRound || feedback) return;
+    e.preventDefault();
+    const stageEl = stageRef.current;
+    if(!stageEl) return;
+    const rect = stageEl.getBoundingClientRect();
+    setDragging(true);
+    setSettling(false);
+    dragInfo.current = { rect };
+    try{ e.target.setPointerCapture(e.pointerId); }catch(err){}
+  };
+
+  const handlePointerMove = (e) => {
+    if(!dragging || !dragInfo.current) return;
+    const rect = dragInfo.current.rect;
+    let leftPct = ((e.clientX - rect.left) / rect.width) * 100;
+    let topPct = ((e.clientY - rect.top) / rect.height) * 100;
+    leftPct = Math.max(4, Math.min(96, leftPct));
+    topPct = Math.max(6, Math.min(94, topPct));
+    setCharPos({ left: leftPct, top: topPct });
+  };
+
+  const finalizeRound = (correct, retryUsed) => {
+    const lvl = currentRound.level;
+    const pts = correct ? (retryUsed ? lvl*5 : lvl*10) : 0;
+    if(correct){
+      setScore(s => s + pts);
+      setStreak(s => {
+        const ns = s+1;
+        setBestStreak(b => Math.max(b, ns));
+        return ns;
+      });
+      setRoundResults(rr => rr.concat([retryUsed ? 'retry' : 'perfect']));
+      beep('correct');
+      const msg = CORRECT_MSGS[Math.floor(Math.random()*CORRECT_MSGS.length)];
+      setFeedback({ type:'correct', msg, learned: POST[currentRound.zoneKey] });
+      setZoneFlash({ [currentRound.zoneKey]: 'correct' });
+      advanceTimer.current = setTimeout(()=>{
+        const nextIdx = roundIdx+1;
+        goToRound(nextIdx, rounds);
+      }, 1650);
+    }
+  };
+
+  const handlePointerUp = (e) => {
+    if(!dragging || !currentRound || !dragInfo.current) return;
+    setDragging(false);
+    const rect = dragInfo.current.rect;
+    const dropXpx = e.clientX - rect.left;
+    const dropYpx = e.clientY - rect.top;
+    const dropLeft = (dropXpx / rect.width) * 100;
+    const dropTop = (dropYpx / rect.height) * 100;
+
+    // Zone circles are sized as a % of stage WIDTH (see .zone CSS), so
+    // hit-testing must compare true pixel distance against a radius
+    // that's also converted from % of width — not raw percentage points,
+    // which would be skewed by the stage's non-square aspect ratio.
+    let hitZone = null;
+    let bestDist = Infinity;
+    scene.zones.forEach(z => {
+      const zx = (z.left/100) * rect.width;
+      const zy = (z.top/100) * rect.height;
+      const dx = dropXpx - zx;
+      const dy = dropYpx - zy;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      const radiusPx = (z.radius/100) * rect.width;
+      if(dist <= radiusPx && dist < bestDist){
+        bestDist = dist;
+        hitZone = z;
+      }
+    });
+
+    dragInfo.current = null;
+
+    if(!hitZone){
+      // dropped nowhere useful -> snap back to dock
+      setSettling(true);
+      setCharPos({ left: scene.dock.left, top: scene.dock.top });
+      setTimeout(()=>setSettling(false), 380);
+      return;
+    }
+
+    setSettling(true);
+    setCharPos({ left: hitZone.left, top: hitZone.top });
+    setTimeout(()=>setSettling(false), 380);
+
+    if(hitZone.key === currentRound.zoneKey){
+      finalizeRound(true, attempts > 0);
+    } else {
+      setAttempts(a => a+1);
+      setStreak(0);
+      beep('wrong');
+      setZoneFlash({ [hitZone.key]: 'wrong' });
+      const msg = WRONG_MSGS[Math.floor(Math.random()*WRONG_MSGS.length)];
+      setFeedback({ type:'wrong', msg });
+      setShaking(true);
+      setTimeout(()=>setShaking(false), 400);
+      setTimeout(()=>{
+        setFeedback(null);
+        setZoneFlash({});
+        setSettling(true);
+        setCharPos({ left: scene.dock.left, top: scene.dock.top });
+        setTimeout(()=>setSettling(false), 380);
+      }, 900);
+      if(attempts + 1 >= 2){
+        setShowZoneHintKey(currentRound.zoneKey);
+      }
+    }
+  };
+
+  const skipRound = () => {
+    if(advanceTimer.current) clearTimeout(advanceTimer.current);
+    goToRound(roundIdx+1, rounds);
+  };
+
+  /* ---------------- Title screen ---------------- */
+  if(screen === 'title'){
+    return (
+      <div className="title-screen">
+        <div className="title-hero">🐱🌿</div>
+        <div className="title-tamil tamil">இடச்சொல் தோட்டம்</div>
+        <div className="title-sub">Tamil Postpositions Garden — learn where things are, in Tamil!</div>
+        <div className="howto">
+          <div style={{marginBottom:6}}>📖 <b>எப்படி விளையாட?</b></div>
+          <div>1. தமிழ் வாக்கியத்தைப் படி.<br/><span style={{color:'#7a6a45', fontSize:12}}>Read the Tamil sentence.</span></div>
+          <div style={{marginTop:4}}>2. 🐱 பூனையை சரியான இடத்தில் இழுத்து விடு!<br/><span style={{color:'#7a6a45', fontSize:12}}>Drag the cat to the correct spot!</span></div>
+        </div>
+        <button className="start-btn tamil" onClick={startGame}>தொடங்கு ▶</button>
+        <button className="ghost-btn" style={{maxWidth:220}} onClick={()=>setShowWordList(true)}>📚 சொல் பட்டியல் பார்</button>
+        {showWordList && <WordListModal onClose={()=>setShowWordList(false)} />}
+      </div>
+    );
+  }
+
+  /* ---------------- Summary screen ---------------- */
+  if(screen === 'summary'){
+    const perfectCount = roundResults.filter(r=>r==='perfect').length;
+    const accuracy = maxScore ? Math.round((score/maxScore)*100) : 0;
+    let starCount = 1;
+    if(accuracy >= 90) starCount = 3; else if(accuracy >= 65) starCount = 2;
+    return (
+      <div className="summary-screen">
+        <div className="stars">{'⭐'.repeat(starCount)}{'☆'.repeat(3-starCount)}</div>
+        <div className="summary-score tamil">{score} புள்ளிகள்</div>
+        <div className="summary-sub">{accuracy}% துல்லியம் · {perfectCount}/{totalRounds} முதல் முயற்சியில் சரி · 🔥 சிறந்த தொடர்: {bestStreak}</div>
+        <div className="summary-sub" style={{marginTop:4}}>நீங்கள் கற்ற இடச்சொற்கள்:</div>
+        <div className="recap-grid">
+          {Object.entries(POST).map(([k,v])=>(
+            <div className="recap-item" key={k}>
+              <span style={{fontSize:18}}>📍</span>
+              <div>
+                <div className="tamil">{v.tamil}</div>
+                <div className="eng">{v.english}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <button className="start-btn tamil" style={{marginTop:14}} onClick={startGame}>மீண்டும் விளையாடு 🔁</button>
+        <button className="ghost-btn" style={{maxWidth:220}} onClick={()=>setShowWordList(true)}>📚 சொல் பட்டியல் பார்</button>
+        {showWordList && <WordListModal onClose={()=>setShowWordList(false)} />}
+      </div>
+    );
+  }
+
+  /* ---------------- Play screen ---------------- */
+  if(!currentRound){
+    return <div style={{padding:20}}>ஏற்றுகிறது...</div>;
+  }
+
+  return (
+    <React.Fragment>
+      <div className="topbar">
+        <div className="brand">
+          <div className="brand-emoji">🐱</div>
+          <div className="brand-text">
+            <div className="tamil">இடச்சொல் தோட்டம்</div>
+            <div className="sub">TAMIL POSTPOSITIONS</div>
+          </div>
+        </div>
+        <div className="stat-row">
+          <div className="stat-pill">⭐ {score}</div>
+          <div className="stat-pill">🔥 {streak}</div>
+        </div>
+      </div>
+
+      <div className="progress-track">
+        {rounds.map((r,i)=>{
+          let cls = 'progress-dot';
+          if(i > 0 && rounds[i-1].level !== r.level) cls += ' group-start';
+          if(i === roundIdx) cls += ' current';
+          else if(roundResults[i] === 'perfect') cls += ' done-perfect';
+          else if(roundResults[i] === 'retry') cls += ' done-retry';
+          return <div key={i} className={cls}></div>;
+        })}
+      </div>
+
+      <div className="card sentence-card">
+        <div className="scene-label">
+          {scene.id === 'box' ? '📦 பெட்டி காட்சி' : scene.id === 'house' ? '🏠 வீடு காட்சி' : '🌳 மரம் காட்சி'}
+          <span className={'diff-badge lvl'+currentRound.level}>{DIFF_LABEL[currentRound.level]}</span>
+        </div>
+        <div className="sentence-tamil tamil">
+          {variant.pre}<span className="target-word">{variant.target}</span>{variant.post}
+        </div>
+        <div className="reveal-row">
+          <button className="hint-btn" onClick={()=>setRevealHint(v=>!v)}>
+            {revealHint ? 'மறை 🙈' : 'உதவி 💡'}
+          </button>
+        </div>
+        {revealHint && (
+          <div style={{marginTop:6}}>
+            <div className="translit-line">{variant.translit}</div>
+            <div className="english-line">{variant.english}</div>
+          </div>
+        )}
+      </div>
+
+      <KolamStrip />
+
+      <div className="stage-wrap">
+        <div
+          className="stage"
+          ref={stageRef}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerCancel={handlePointerUp}
+        >
+          <div className="sun"></div>
+          <div className="stage-caption">{scene.caption}</div>
+
+          <SceneArt sceneId={scene.id} />
+
+          {scene.zones.map(z=>{
+            const isBehind = scene.id === 'house' && z.key === 'pinnal';
+            let cls = 'zone';
+            if(zoneFlash[z.key] === 'correct') cls += ' glow-correct';
+            if(zoneFlash[z.key] === 'wrong') cls += ' glow-wrong';
+            if(showZoneHintKey === z.key) cls += ' hint-pulse';
+            return (
+              <div key={z.key} className={cls}
+                style={{
+                  left: z.left+'%', top: z.top+'%',
+                  width: (z.radius*2.1)+'%', aspectRatio:'1',
+                  zIndex: isBehind ? 1 : 4,
+                }}
+              ></div>
+            );
+          })}
+
+          <div className="dock" style={{ left: scene.dock.left+'%', top: scene.dock.top+'%' }}>🐾</div>
+
+          <div
+            className={'character' + (dragging?' dragging':'') + (settling?' settle':'') + (shaking?' shake':'')}
+            style={{
+              left: charPos.left+'%',
+              top: charPos.top+'%',
+              zIndex: (scene.id==='house' && charPos.top > 41 && charPos.top < 64) ? 1 : 10,
+            }}
+            onPointerDown={handlePointerDown}
+          >🐱</div>
+        </div>
+      </div>
+
+      <div className="feedback-banner tamil">
+        {feedback && feedback.type === 'wrong' && <span className="wrong">{feedback.msg}</span>}
+        {feedback && feedback.type === 'correct' && (
+          <div>
+            <span className="correct">{feedback.msg}</span>
+            <div>
+              <span className="learned-chip">
+                <span className="tamil">{feedback.learned.tamil}</span>
+                <span className="meaning">{feedback.learned.english}</span>
+              </span>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div className="bottom-row">
+        <button className="ghost-btn" onClick={()=>setShowWordList(true)}>📚 சொல் பட்டியல்</button>
+        {feedback && feedback.type === 'correct' && (
+          <button className="ghost-btn" onClick={()=>{ if(advanceTimer.current) clearTimeout(advanceTimer.current); goToRound(roundIdx+1, rounds); }}>அடுத்தது ▶</button>
+        )}
+        {!feedback && (
+          <button className="ghost-btn" onClick={skipRound}>தவிர் ⏭</button>
+        )}
+      </div>
+
+      {showWordList && <WordListModal onClose={()=>setShowWordList(false)} />}
+    </React.Fragment>
+  );
+}
+
+function WordListModal({ onClose }){
+  return (
+    <div className="modal-backdrop" onClick={onClose}>
+      <div className="modal-sheet" onClick={e=>e.stopPropagation()}>
+        <div className="modal-title tamil">📚 இடச்சொற்கள்</div>
+        {Object.entries(POST).map(([k,v])=>(
+          <div className="word-row" key={k}>
+            <div className="word-emoji">📍</div>
+            <div className="word-tamil tamil">{v.tamil}</div>
+            <div className="word-translit">{v.translit}</div>
+            <div className="word-eng">{v.english}</div>
+          </div>
+        ))}
+        <button className="close-modal" onClick={onClose}>மூடு</button>
+      </div>
+    </div>
+  );
+}
+
+const container = document.getElementById('root');
+const root = ReactDOM.createRoot(container);
+root.render(<App />);
+</script>
+</body>
+</html>
