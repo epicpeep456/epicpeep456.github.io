@@ -1,0 +1,33 @@
+:root {
+  --sky-top: #87CEEB;
+  --sky-mid: #4A90D9;
+  --sky-bottom: #2C5F8A;
+  --water: #1a5276;
+  --water-light: #2980b9;
+  --drop-bg: linear-gradient(135deg, #64B5F6, #42A5F5);
+  --drop-shadow: 0 4px 15px rgba(100, 181, 246, 0.4);
+  --btn-bg: rgba(255, 255, 255, 0.15);
+  --btn-hover: rgba(255, 255, 255, 0.25);
+  --btn-active: rgba(255, 255, 255, 0.35);
+  --correct: #4CAF50;
+  --wrong: #f44336;
+  --text: #ffffff;
+  --text-dim: rgba(255, 255, 255, 0.7);
+  --hud-bg: rgba(0, 0, 0, 0.3);
+  --tamil-font: 'Noto Sans Tamil', 'TAU_Elango', 'Lohit Tamil', system-ui, sans-serif;
+  font-family: system-ui, sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(180deg, var(--sky-top), var(--sky-mid), var(--sky-bottom));
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+}

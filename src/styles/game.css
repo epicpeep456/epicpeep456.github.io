@@ -1,0 +1,384 @@
+/* ============================================
+   Tamil Compound Letter Raindrop Game - Styles
+   ============================================ */
+
+/* ---- Layout ---- */
+
+.game-container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.sky-area {
+  flex: 0 0 60%;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--sky-top), var(--sky-mid), var(--sky-bottom));
+}
+
+.water-area {
+  flex: 0 0 40%;
+  position: relative;
+  background: linear-gradient(180deg, var(--water), var(--water-light));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---- Raindrop ---- */
+
+.raindrop {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Teardrop shape: pointed top, rounded bottom */
+  clip-path: polygon(50% 0%, 80% 30%, 100% 60%, 95% 80%, 75% 95%, 50% 100%, 25% 95%, 5% 80%, 0% 60%, 20% 30%);
+  background: var(--drop-bg);
+  box-shadow: var(--drop-shadow);
+  font-family: var(--tamil-font);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text);
+  /* Proportional sizing: auto-size based on text content */
+  width: fit-content;
+  min-width: 70px;
+  /* Maintain teardrop aspect ratio */
+  aspect-ratio: 1 / 1.2;
+  padding: 28px 18px 14px 18px;
+  z-index: 10;
+  will-change: transform;
+  cursor: pointer;
+  transform-origin: center center;
+}
+
+.raindrop-falling {
+  animation: fall var(--fall-duration, 7s) linear forwards;
+}
+
+.sky-area.paused .raindrop-falling {
+  animation-play-state: paused;
+}
+
+.raindrop-pop {
+  transform: scale(1.3);
+  opacity: 0;
+  transition: all 0.2s ease-out;
+}
+
+.raindrop-splash {
+  transform: scale(0.5) translateY(20px);
+  opacity: 0;
+  transition: all 0.3s ease-in;
+}
+
+/* ---- Keyframes: Fall ---- */
+
+@keyframes fall {
+  from { transform: translateY(-80px); }
+  to { transform: translateY(calc(100vh * 0.6)); }
+}
+
+/* ---- Raindrop clickable ---- */
+
+.raindrop-wrong {
+  background: var(--wrong) !important;
+  border-color: var(--wrong) !important;
+  animation: flash-red 0.3s;
+}
+
+/* ---- Target Display ---- */
+
+.target-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 20px 40px;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.target-equation {
+  font-family: var(--tamil-font);
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--text);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.target-hint {
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ---- HUD ---- */
+
+.hud {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  background: var(--hud-bg);
+  backdrop-filter: blur(10px);
+  z-index: 100;
+  color: var(--text);
+}
+
+.hud-timer {
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.hud-timer--warning {
+  color: var(--wrong);
+  animation: pulse 1s infinite;
+}
+
+.hud-score {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.combo-indicator {
+  font-size: 1.2rem;
+  font-weight: 700;
+  transition: transform 0.2s;
+}
+
+.combo-indicator--pulse {
+  animation: combo-pulse 0.3s;
+}
+
+/* ---- Screens ---- */
+
+.start-screen {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, var(--sky-top), var(--sky-mid), var(--sky-bottom));
+  z-index: 200;
+  color: var(--text);
+}
+
+.start-screen h1 {
+  font-size: 3rem;
+  margin-bottom: 8px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.start-screen p {
+  font-size: 1.1rem;
+  color: var(--text-dim);
+  margin-bottom: 32px;
+  max-width: 400px;
+  text-align: center;
+}
+
+.difficulty-buttons {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.difficulty-btn {
+  font-size: 1.1rem;
+  padding: 16px 32px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.15);
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.2s;
+  backdrop-filter: blur(10px);
+  min-width: 140px;
+}
+
+.difficulty-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
+}
+
+.difficulty-btn-label {
+  font-size: 1.3rem;
+  font-weight: 700;
+  display: block;
+}
+
+.difficulty-btn-desc {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  display: block;
+  margin-top: 4px;
+}
+
+.game-over-screen {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, var(--sky-top), var(--sky-mid), var(--sky-bottom));
+  z-index: 200;
+  color: var(--text);
+}
+
+.game-over-screen h1 {
+  font-size: 2.5rem;
+}
+
+.final-score {
+  font-size: 4rem;
+  font-weight: 800;
+  margin: 16px 0 32px;
+  animation: score-count 0.5s ease-out;
+}
+
+/* ---- Animations ---- */
+
+@keyframes flash-green {
+  0% { background: var(--correct); }
+  100% { background: var(--btn-bg); }
+}
+
+@keyframes flash-red {
+  0% { background: var(--wrong); }
+  100% { background: var(--btn-bg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes combo-pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+
+@keyframes score-count {
+  0% { transform: scale(0.5); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ---- Pause ---- */
+
+.hud-pause-btn {
+  background: none;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 1.2rem;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.hud-pause-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+.pause-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 300;
+}
+
+.pause-content {
+  text-align: center;
+  color: var(--text);
+}
+
+.pause-content h2 {
+  font-size: 3rem;
+  margin-bottom: 24px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.pause-resume-btn {
+  font-size: 1.2rem;
+  padding: 14px 40px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.15);
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.2s;
+  backdrop-filter: blur(10px);
+}
+
+.pause-resume-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
+}
+
+/* ---- Water Wave Effect ---- */
+
+.water-area::before {
+  content: '';
+  position: absolute;
+  top: -20px;
+  left: 0;
+  right: 0;
+  height: 40px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 40'%3E%3Cpath d='M0 20 Q150 0 300 20 T600 20 T900 20 T1200 20 V40 H0 Z' fill='%231a5276'/%3E%3C/svg%3E") repeat-x;
+  background-size: 600px 40px;
+  animation: wave 3s linear infinite;
+}
+
+@keyframes wave {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-600px); }
+}
+
+/* ---- Rain Particles (CSS-only) ---- */
+
+.sky-area::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 10% 20%, rgba(255, 255, 255, 0.3), transparent),
+    radial-gradient(1px 1px at 30% 40%, rgba(255, 255, 255, 0.2), transparent),
+    radial-gradient(1px 1px at 50% 10%, rgba(255, 255, 255, 0.25), transparent),
+    radial-gradient(1px 1px at 70% 60%, rgba(255, 255, 255, 0.3), transparent),
+    radial-gradient(1px 1px at 90% 30%, rgba(255, 255, 255, 0.2), transparent),
+    radial-gradient(1px 1px at 15% 70%, rgba(255, 255, 255, 0.25), transparent),
+    radial-gradient(1px 1px at 45% 80%, rgba(255, 255, 255, 0.3), transparent),
+    radial-gradient(1px 1px at 65% 15%, rgba(255, 255, 255, 0.2), transparent),
+    radial-gradient(1px 1px at 85% 55%, rgba(255, 255, 255, 0.25), transparent),
+    radial-gradient(1px 1px at 25% 90%, rgba(255, 255, 255, 0.3), transparent);
+  animation: rain-fall 0.5s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes rain-fall {
+  0% { transform: translateY(-10px); }
+  100% { transform: translateY(10px); }
+}
