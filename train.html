@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>வினை ரயில் — Verb Train</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=Noto+Sans+Tamil:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --platform:#D9DEE1;
+    --platform-2:#C8CFD3;
+    --board:#0E3B2E;
+    --board-ink:#F2F6EF;
+    --coach:#7B2D26;
+    --coach-2:#94392F;
+    --amber:#E0973A;
+    --green:#1F7A4C;
+    --maroon:#8E2F3F;
+    --ink:#15201E;
+    --muted:#4C5B57;
+    --rail:#6E7B7A;
+    --sleeper:#A9AFA8;
+    --card:#F4F5F1;
+    --line:#B4BCBD;
+    --shadow:rgba(20,32,30,.18);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --platform:#141C1C;
+      --platform-2:#0E1414;
+      --board:#0B2C22;
+      --board-ink:#E7EFE6;
+      --coach:#8D3730;
+      --coach-2:#A34438;
+      --amber:#E3A54D;
+      --green:#2E9A61;
+      --maroon:#A73C4E;
+      --ink:#E8EEEA;
+      --muted:#9BABA5;
+      --rail:#55625F;
+      --sleeper:#2A3231;
+      --card:#1B2423;
+      --line:#31403D;
+      --shadow:rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --platform:#141C1C; --platform-2:#0E1414; --board:#0B2C22; --board-ink:#E7EFE6;
+    --coach:#8D3730; --coach-2:#A34438; --amber:#E3A54D; --green:#2E9A61; --maroon:#A73C4E;
+    --ink:#E8EEEA; --muted:#9BABA5; --rail:#55625F; --sleeper:#2A3231; --card:#1B2423;
+    --line:#31403D; --shadow:rgba(0,0,0,.5);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--platform);
+    color:var(--ink);
+    font-family:"Noto Sans Tamil","Barlow Semi Condensed",system-ui,-apple-system,Segoe UI,sans-serif;
+    -webkit-text-size-adjust:100%;
+  }
+  .sign{font-family:"Barlow Semi Condensed","Noto Sans Tamil",system-ui,sans-serif;}
+  #root{max-width:1000px;margin:0 auto;padding:0 14px 48px}
+
+  /* header station board */
+  .board{
+    background:var(--board);color:var(--board-ink);
+    border-radius:0 0 10px 10px;
+    padding:14px 18px 12px;
+    display:flex;flex-wrap:wrap;align-items:baseline;gap:10px 18px;
+    box-shadow:0 6px 16px var(--shadow);
+    border-bottom:4px solid var(--amber);
+  }
+  .board h1{margin:0;font-size:clamp(22px,4.6vw,34px);font-weight:700;letter-spacing:.5px}
+  .board h1 .en{font-size:.52em;font-weight:600;opacity:.8;margin-left:10px;font-family:"Barlow Semi Condensed",sans-serif;letter-spacing:1.5px}
+  .board p{margin:0;font-size:14px;opacity:.82;flex:1 1 220px;line-height:1.45}
+  .scoreboard{display:flex;gap:16px;font-family:"Barlow Semi Condensed",sans-serif;font-weight:600}
+  .scoreboard b{display:block;font-size:22px;line-height:1}
+  .scoreboard span{font-size:11px;letter-spacing:1.4px;opacity:.75}
+
+  .bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:14px 0 6px}
+  .seg{display:flex;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:3px;gap:2px}
+  .seg button{
+    border:0;background:transparent;color:var(--muted);cursor:pointer;
+    padding:7px 13px;border-radius:999px;font:inherit;font-size:14px;
+  }
+  .seg button[aria-pressed="true"]{background:var(--board);color:var(--board-ink)}
+  .seg button:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+  .spacer{flex:1}
+  .ghost{
+    border:1px solid var(--line);background:var(--card);color:var(--muted);
+    border-radius:999px;padding:8px 14px;font:inherit;font-size:14px;cursor:pointer;
+  }
+  .ghost:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+
+  /* scene */
+  .scene{
+    position:relative;margin-top:10px;border-radius:12px;overflow:hidden;
+    background:linear-gradient(var(--platform-2),var(--platform));
+    border:1px solid var(--line);
+    padding:18px 0 0;
+  }
+  .stations{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 12px}
+  .station{
+    position:relative;border-radius:8px 8px 0 0;padding:10px 8px 12px;text-align:center;
+    background:var(--card);border:2px solid var(--line);border-bottom:0;cursor:pointer;
+    transition:transform .15s ease, border-color .15s ease;
+    font:inherit;color:inherit;
+  }
+  .station:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+  .station .ta{display:block;font-size:clamp(15px,3.4vw,20px);font-weight:700;line-height:1.25}
+  .station .en{display:block;font-size:12px;color:var(--muted);margin-top:2px;font-family:"Barlow Semi Condensed",sans-serif;letter-spacing:1.2px}
+  .station[data-t="past"][aria-pressed="true"]{background:var(--maroon);border-color:var(--maroon);color:#fff;transform:translateY(-4px)}
+  .station[data-t="present"][aria-pressed="true"]{background:var(--green);border-color:var(--green);color:#fff;transform:translateY(-4px)}
+  .station[data-t="future"][aria-pressed="true"]{background:var(--amber);border-color:var(--amber);color:#1a1200;transform:translateY(-4px)}
+  .station[aria-pressed="true"] .en{color:inherit;opacity:.85}
+
+  .tracks{height:26px;position:relative;margin:0 12px}
+  .tracks div{position:absolute;top:0;width:33.33%;height:100%;
+    background:repeating-linear-gradient(90deg,var(--sleeper) 0 4px,transparent 4px 12px);
+    border-top:3px solid var(--rail);border-bottom:3px solid var(--rail);
+  }
+  .tracks div:nth-child(1){left:0}.tracks div:nth-child(2){left:33.33%}.tracks div:nth-child(3){left:66.66%}
+
+  .railbed{
+    margin:0;padding:22px 12px 26px;
+    background:
+      linear-gradient(transparent 46%,var(--rail) 46% 49%,transparent 49% 55%,var(--rail) 55% 58%,transparent 58%);
+    overflow-x:auto;
+  }
+  .train{display:flex;align-items:flex-end;gap:6px;min-width:max-content;transition:transform .7s cubic-bezier(.4,0,.2,1),opacity .6s ease}
+  .train.depart-past{transform:translate(-14%,-64px) scale(.6);opacity:0}
+  .train.depart-present{transform:translate(0,-64px) scale(.6);opacity:0}
+  .train.depart-future{transform:translate(14%,-64px) scale(.6);opacity:0}
+  .train.arrive{animation:roll-in .65s cubic-bezier(.2,.8,.3,1) both}
+  @keyframes roll-in{from{transform:translateX(38%);opacity:0}to{transform:none;opacity:1}}
+  @media (prefers-reduced-motion:reduce){
+    .train,.train.arrive{animation:none;transition:opacity .2s linear}
+    .train.depart-past,.train.depart-present,.train.depart-future{transform:none;opacity:.25}
+  }
+
+  .car{
+    position:relative;min-width:84px;padding:14px 14px 10px;border-radius:6px;
+    background:linear-gradient(var(--coach-2),var(--coach));color:#FFF6EC;
+    border:2px solid rgba(0,0,0,.25);text-align:center;
+    box-shadow:0 4px 0 rgba(0,0,0,.28);
+  }
+  .car.engine{border-radius:6px 16px 6px 6px;background:linear-gradient(#20403A,#12302A)}
+  .car .txt{font-size:clamp(20px,4.6vw,28px);font-weight:700;line-height:1.3;display:block}
+  .car .role{display:block;font-size:11px;letter-spacing:1.1px;margin-top:4px;opacity:.78;font-family:"Barlow Semi Condensed",sans-serif}
+  .car::after{
+    content:"";position:absolute;left:14px;right:14px;bottom:-12px;height:10px;
+    background:radial-gradient(circle at 8px 5px,#20262A 4px,transparent 5px),
+               radial-gradient(circle at calc(100% - 8px) 5px,#20262A 4px,transparent 5px);
+  }
+  .coupler{width:14px;height:4px;background:var(--rail);border-radius:2px;margin-bottom:22px}
+  .car.slot{
+    background:var(--card);border:2px dashed var(--line);color:var(--muted);box-shadow:none;
+    min-height:66px;display:flex;flex-direction:column;justify-content:center;
+  }
+  .car.slot .txt{color:var(--ink)}
+
+  /* panels */
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-top:14px}
+  .panel h2{margin:0 0 4px;font-size:16px;font-weight:700}
+  .panel .hint{margin:0 0 12px;color:var(--muted);font-size:14px;line-height:1.5}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{
+    border:2px solid var(--line);background:transparent;color:var(--ink);
+    border-radius:8px;padding:9px 12px;cursor:pointer;font:inherit;text-align:left;line-height:1.2;
+  }
+  .chip .ta{font-size:19px;font-weight:600;display:block}
+  .chip .en{font-size:11.5px;color:var(--muted);display:block;margin-top:2px;font-family:"Barlow Semi Condensed",sans-serif;letter-spacing:.8px}
+  .chip[aria-pressed="true"]{border-color:var(--board);background:var(--board);color:var(--board-ink)}
+  .chip[aria-pressed="true"] .en{color:inherit;opacity:.8}
+  .chip:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+  .chip:disabled{opacity:.5;cursor:default}
+
+  .go{
+    margin-top:14px;width:100%;border:0;border-radius:10px;padding:15px;
+    background:var(--green);color:#fff;font:inherit;font-size:18px;font-weight:700;cursor:pointer;
+    box-shadow:0 4px 0 rgba(0,0,0,.25);
+  }
+  .go:disabled{background:var(--line);color:var(--muted);box-shadow:none;cursor:not-allowed}
+  .go:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
+
+  .verdict{border-left:6px solid var(--green)}
+  .verdict.bad{border-left-color:var(--maroon)}
+  .verdict h2{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+  .full{font-size:clamp(24px,5.6vw,34px);font-weight:700;margin:6px 0 10px}
+  table{border-collapse:collapse;width:100%;font-size:14px}
+  th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-family:"Barlow Semi Condensed",sans-serif;letter-spacing:1px;font-size:11.5px;color:var(--muted);font-weight:600}
+  td .m{font-size:19px;font-weight:600}
+  .note{margin:10px 0 0;font-size:14px;line-height:1.55;color:var(--muted)}
+  .prompt{font-size:clamp(17px,3.8vw,21px);line-height:1.5;margin:0 0 4px}
+  .prompt b{color:var(--maroon)}
+  footer{margin-top:20px;color:var(--muted);font-size:13px;line-height:1.6}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<script type="text/babel" data-presets="react">
+const { useState, useMemo, useEffect, useCallback } = React;
+
+/* ---------- Tamil morpheme joining ----------
+   Morphemes are stored consonant-final (e.g. "படித்த்") and person suffixes
+   vowel-initial (e.g. "ஏன்").  Joining strips the pulli and attaches the
+   matching vowel sign: படித்த் + ஏன் -> படித்தேன்                        */
+const SIGN = { "அ":"", "ஆ":"\u0BBE", "இ":"\u0BBF", "ஈ":"\u0BC0", "உ":"\u0BC1",
+  "ஊ":"\u0BC2", "எ":"\u0BC6", "ஏ":"\u0BC7", "ஐ":"\u0BC8", "ஒ":"\u0BCA",
+  "ஓ":"\u0BCB", "ஔ":"\u0BCC" };
+
+function join(stem, suffix){
+  const v = suffix[0];
+  if (stem.endsWith("\u0BCD") && SIGN[v] !== undefined){
+    return stem.slice(0,-1) + SIGN[v] + suffix.slice(1);
+  }
+  return stem + suffix;
+}
+
+/* ---------- verbs ----------
+   [stem, marker] per tense.  pastN = neuter-singular past (ஓடியது not ஓடினது).
+   futN = the fused future-neuter form, which carries no person car at all.  */
+const VERBS = [
+  { root:"படி", en:"study", past:["படித்த்","த்த்"], pastN:["படித்த்","த்த்"],
+    pres:["படிக்கிற்","க்கிற்"], fut:["படிப்ப்","ப்ப்"], futN:["படிக்கும்","க்கும்"] },
+  { root:"பார்", en:"see", past:["பார்த்த்","த்த்"], pastN:["பார்த்த்","த்த்"],
+    pres:["பார்க்கிற்","க்கிற்"], fut:["பார்ப்ப்","ப்ப்"], futN:["பார்க்கும்","க்கும்"] },
+  { root:"சிரி", en:"laugh", past:["சிரித்த்","த்த்"], pastN:["சிரித்த்","த்த்"],
+    pres:["சிரிக்கிற்","க்கிற்"], fut:["சிரிப்ப்","ப்ப்"], futN:["சிரிக்கும்","க்கும்"] },
+  { root:"கொடு", en:"give", past:["கொடுத்த்","த்த்"], pastN:["கொடுத்த்","த்த்"],
+    pres:["கொடுக்கிற்","க்கிற்"], fut:["கொடுப்ப்","ப்ப்"], futN:["கொடுக்கும்","க்கும்"] },
+  { root:"நட", en:"walk", past:["நடந்த்","ந்த்"], pastN:["நடந்த்","ந்த்"],
+    pres:["நடக்கிற்","க்கிற்"], fut:["நடப்ப்","ப்ப்"], futN:["நடக்கும்","க்கும்"] },
+  { root:"சாப்பிடு", en:"eat", past:["சாப்பிட்ட்","ட்ட்"], pastN:["சாப்பிட்ட்","ட்ட்"],
+    pres:["சாப்பிடுகிற்","கிற்"], fut:["சாப்பிடுவ்","வ்"], futN:["சாப்பிடும்","உம்"] },
+  { root:"ஓடு", en:"run", past:["ஓடின்","இன்"], pastN:["ஓடிய்","இய்"],
+    pres:["ஓடுகிற்","கிற்"], fut:["ஓடுவ்","வ்"], futN:["ஓடும்","உம்"] },
+  { root:"எழுது", en:"write", past:["எழுதின்","இன்"], pastN:["எழுதிய்","இய்"],
+    pres:["எழுதுகிற்","கிற்"], fut:["எழுதுவ்","வ்"], futN:["எழுதும்","உம்"] },
+  { root:"வாங்கு", en:"buy", past:["வாங்கின்","இன்"], pastN:["வாங்கிய்","இய்"],
+    pres:["வாங்குகிற்","கிற்"], fut:["வாங்குவ்","வ்"], futN:["வாங்கும்","உம்"] },
+  { root:"பாடு", en:"sing", past:["பாடின்","இன்"], pastN:["பாடிய்","இய்"],
+    pres:["பாடுகிற்","கிற்"], fut:["பாடுவ்","வ்"], futN:["பாடும்","உம்"] },
+  { root:"விளையாடு", en:"play", past:["விளையாடின்","இன்"], pastN:["விளையாடிய்","இய்"],
+    pres:["விளையாடுகிற்","கிற்"], fut:["விளையாடுவ்","வ்"], futN:["விளையாடும்","உம்"] }
+];
+
+const PEOPLE = [
+  { id:"naan",   ta:"நான்",     en:"I",              suf:"ஏன்",    lvl:1 },
+  { id:"nee",    ta:"நீ",       en:"you (one)",      suf:"ஆய்",    lvl:1 },
+  { id:"avan",   ta:"அவன்",     en:"he",             suf:"ஆன்",    lvl:1 },
+  { id:"aval",   ta:"அவள்",     en:"she",            suf:"ஆள்",    lvl:2 },
+  { id:"avar",   ta:"அவர்",     en:"he/she (resp.)", suf:"ஆர்",    lvl:2 },
+  { id:"naangal",ta:"நாங்கள்",   en:"we",             suf:"ஓம்",    lvl:2 },
+  { id:"neengal",ta:"நீங்கள்",   en:"you (many)",     suf:"ஈர்கள்",  lvl:2 },
+  { id:"avargal",ta:"அவர்கள்",   en:"they (people)",  suf:"ஆர்கள்",  lvl:2 },
+  { id:"adhu",   ta:"அது",      en:"it",             suf:"அது",    lvl:3, neut:"sg" },
+  { id:"avai",   ta:"அவை",      en:"they (things)",  suf:"அன",     lvl:3, neut:"pl" }
+];
+
+const TENSES = [
+  { id:"past",    ta:"இறந்த காலம்", en:"PAST",    label:"past" },
+  { id:"present", ta:"நிகழ் காலம்",  en:"PRESENT", label:"present" },
+  { id:"future",  ta:"எதிர் காலம்",  en:"FUTURE",  label:"future" }
+];
+
+/* Build the full form plus its car breakdown. */
+function build(verb, tense, person){
+  if (tense === "future" && person.neut){
+    return { form: verb.futN[0], noPerson:true,
+      cars:[ {txt:verb.root, role:"base", kind:"engine"},
+             {txt:verb.futN[1], role:"tense + person (fused)", kind:"tense"} ] };
+  }
+  let stem, mark;
+  if (tense === "past"){
+    [stem, mark] = person.neut === "sg" ? verb.pastN : verb.past;
+  } else if (tense === "present"){
+    [stem, mark] = verb.pres;
+    if (person.neut === "pl"){ stem = stem.replace("கிற்","கின்ற்"); mark = mark.replace("கிற்","கின்ற்"); }
+  } else {
+    [stem, mark] = verb.fut;
+  }
+  return { form: join(stem, person.suf), noPerson:false,
+    cars:[ {txt:verb.root, role:"base", kind:"engine"},
+           {txt:mark, role:"tense marker", kind:"tense"},
+           {txt:person.suf, role:"person marker", kind:"person"} ] };
+}
+
+const pick = a => a[Math.floor(Math.random()*a.length)];
+const shuffle = a => a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(p=>p[1]);
+
+function makeRound(level, mode){
+  const people = PEOPLE.filter(p=>p.lvl<=level);
+  const verb = pick(VERBS);
+  const tense = pick(TENSES).id;
+  const person = pick(people);
+  const answer = build(verb, tense, person);
+  /* every round offers the complete person paradigm for this level, in
+     canonical order, so the whole set gets exercised rather than a sample */
+  const options = people;
+  let markerOptions = null;
+  if (mode === "build"){
+    const set = new Set();
+    const marks = [];
+    [["past",verb.past[1]],["present",verb.pres[1]],["future",verb.fut[1]]].forEach(([t,m])=>{
+      if(!set.has(m)){ set.add(m); marks.push({ id:t, txt:m }); }
+    });
+    if (tense === "future" && person.neut){ marks.push({ id:"futN", txt:verb.futN[1] }); }
+    markerOptions = shuffle(marks);
+  }
+  return { verb, tense, person, answer, options, markerOptions };
+}
+
+function Car({ car }){
+  return (
+    <div className={"car " + (car.kind==="engine" ? "engine" : "")}>
+      <span className="txt">{car.txt}</span>
+      <span className="role sign">{car.role}</span>
+    </div>
+  );
+}
+
+function Train({ cars, cls }){
+  const kids = [];
+  cars.forEach((c,i)=>{
+    if (i) kids.push(<div className="coupler" key={"c"+i} />);
+    kids.push(c.slot
+      ? <div className="car slot" key={"s"+i}>
+          <span className="txt">{c.txt || "?"}</span>
+          <span className="role sign">{c.role}</span>
+        </div>
+      : <Car car={c} key={"k"+i} />);
+  });
+  return <div className="railbed"><div className={"train " + cls}>{kids}</div></div>;
+}
+
+function App(){
+  const [mode, setMode] = useState("route");
+  const [level, setLevel] = useState(3);
+  const [round, setRound] = useState(()=>makeRound(3,"route"));
+  const [tenseGuess, setTenseGuess] = useState(null);
+  const [personGuess, setPersonGuess] = useState(null);
+  const [markerGuess, setMarkerGuess] = useState(null);
+  const [result, setResult] = useState(null);
+  const [score, setScore] = useState(0);
+  const [streak, setStreak] = useState(0);
+  const [best, setBest] = useState(0);
+  const [hints, setHints] = useState(true);
+  const [anim, setAnim] = useState("arrive");
+
+  useEffect(()=>{ try{ const b = localStorage.getItem("vinai-best"); if(b) setBest(+b); }catch(e){} },[]);
+  useEffect(()=>{ try{ localStorage.setItem("vinai-best", String(best)); }catch(e){} },[best]);
+
+  const fresh = useCallback((lv, md)=>{
+    setRound(makeRound(lv, md));
+    setTenseGuess(null); setPersonGuess(null); setMarkerGuess(null); setResult(null);
+    setAnim("arrive");
+    setTimeout(()=>setAnim(""), 700);
+  },[]);
+
+  const switchMode = m => { setMode(m); fresh(level, m); };
+  const switchLevel = l => { setLevel(l); fresh(l, mode); };
+
+  const { verb, tense, person, answer, options, markerOptions } = round;
+
+  const ready = mode === "route"
+    ? (tenseGuess && personGuess)
+    : (markerGuess && (answer.noPerson || personGuess));
+
+  const depart = () => {
+    let ok, chosen;
+    if (mode === "route"){
+      ok = tenseGuess === tense && personGuess === person.id;
+      chosen = tenseGuess;
+    } else {
+      const markOk = markerGuess === (answer.noPerson ? "futN" : tense);
+      const persOk = answer.noPerson || personGuess === person.id;
+      ok = markOk && persOk;
+      chosen = tense;
+    }
+    setResult(ok ? "ok" : "no");
+    setAnim(ok ? "depart-" + chosen : "");
+    if (ok){
+      const s = streak + 1;
+      setScore(score + (mode === "build" ? 15 : 10));
+      setStreak(s); if (s > best) setBest(s);
+    } else setStreak(0);
+  };
+
+  /* cars shown while the player is still deciding */
+  const displayCars = useMemo(()=>{
+    if (mode === "route") return answer.cars;
+    if (result) return answer.cars;
+    const cars = [{ txt: verb.root, role:"base", kind:"engine" }];
+    const m = markerGuess && markerOptions.find(o=>o.id===markerGuess);
+    cars.push({ slot:true, txt: m ? m.txt : "", role:"tense marker" });
+    if (!(markerGuess === "futN")){
+      const p = personGuess && PEOPLE.find(o=>o.id===personGuess);
+      cars.push({ slot:true, txt: p ? p.suf : "", role:"person marker" });
+    }
+    return cars;
+  },[mode, result, answer, verb, markerGuess, personGuess, markerOptions]);
+
+  const preview = useMemo(()=>{
+    if (mode !== "build" || result) return null;
+    const m = markerGuess && markerOptions.find(o=>o.id===markerGuess);
+    if (!m) return null;
+    if (m.id === "futN") return verb.futN[0];
+    let stem;
+    if (m.id === "past") stem = (person.neut === "sg" ? verb.pastN : verb.past)[0];
+    else if (m.id === "present") stem = person.neut === "pl" ? verb.pres[0].replace("கிற்","கின்ற்") : verb.pres[0];
+    else stem = verb.fut[0];
+    const p = personGuess && PEOPLE.find(o=>o.id===personGuess);
+    return p ? join(stem, p.suf) : stem.slice(0,-1) + "…";
+  },[mode, result, markerGuess, personGuess, verb, person, markerOptions]);
+
+  const tenseName = TENSES.find(t=>t.id===tense);
+
+  return (
+    <React.Fragment>
+      <header className="board">
+        <h1>வினை ரயில்<span className="en sign">VERB TRAIN</span></h1>
+        <p>{mode === "route"
+          ? "A verb rolls in already assembled. Read its cars, then set the points for the right tense and the right doer."
+          : "Couple the cars yourself: pick the tense marker, pick the person marker, then send it out."}</p>
+        <div className="scoreboard sign">
+          <div><b>{score}</b><span>SCORE</span></div>
+          <div><b>{streak}</b><span>STREAK</span></div>
+          <div><b>{best}</b><span>BEST</span></div>
+        </div>
+      </header>
+
+      <div className="bar">
+        <div className="seg">
+          <button onClick={()=>switchMode("route")} aria-pressed={mode==="route"}>Route the train</button>
+          <button onClick={()=>switchMode("build")} aria-pressed={mode==="build"}>Build the train</button>
+        </div>
+        <div className="seg">
+          {[1,2,3].map(l=>(
+            <button key={l} onClick={()=>switchLevel(l)} aria-pressed={level===l}>
+              {l===1?"நான் · நீ · அவன்" : l===2?"+ அவள் · அவர் · நாங்கள்…" : "+ அது · அவை"}
+            </button>
+          ))}
+        </div>
+        <div className="spacer" />
+        <button className="ghost" onClick={()=>setHints(!hints)}>
+          {hints ? "Hide car labels" : "Show car labels"}
+        </button>
+      </div>
+
+      <div className="scene">
+        <div className="stations">
+          {TENSES.map(t=>(
+            <button key={t.id} className="station" data-t={t.id}
+              aria-pressed={mode==="route" ? tenseGuess===t.id : (result? tense===t.id : false)}
+              disabled={mode!=="route" || !!result}
+              onClick={()=>!result && setTenseGuess(t.id)}>
+              <span className="ta">{t.ta}</span>
+              <span className="en">{t.en}</span>
+            </button>
+          ))}
+        </div>
+        <div className="tracks"><div /><div /><div /></div>
+        <Train cars={hints ? displayCars : displayCars.map(c=>({...c, role:""}))} cls={anim} />
+      </div>
+
+      {mode === "build" && !result && (
+        <div className="panel">
+          <h2>{verb.root} — {verb.en}</h2>
+          <p className="prompt">
+            <b>{person.ta}</b> · {person.en} · {tenseName.en.toLowerCase()} tense
+            {preview && <span> → <b>{preview}</b></span>}
+          </p>
+          <p className="hint">Pick the tense car, then the person car.</p>
+          <div className="chips" style={{marginBottom:"12px"}}>
+            {markerOptions.map(o=>(
+              <button key={o.id} className="chip" aria-pressed={markerGuess===o.id}
+                onClick={()=>{ setMarkerGuess(o.id); if(o.id==="futN") setPersonGuess(null); }}>
+                <span className="ta">{o.txt}</span>
+                <span className="en">tense car</span>
+              </button>
+            ))}
+          </div>
+          {markerGuess !== "futN" && (
+            <div className="chips">
+              {PEOPLE.filter(p=>p.lvl<=level).map(p=>(
+                <button key={p.id} className="chip" aria-pressed={personGuess===p.id}
+                  onClick={()=>setPersonGuess(p.id)}>
+                  <span className="ta">{p.suf}</span>
+                  <span className="en">{p.ta} · {p.en}</span>
+                </button>
+              ))}
+            </div>
+          )}
+          <button className="go" disabled={!ready} onClick={depart}>புறப்படு · Depart</button>
+        </div>
+      )}
+
+      {mode === "route" && !result && (
+        <div className="panel">
+          <h2>Who is doing it?</h2>
+          <p className="hint">The last car tells you. Set the points above for the tense, then choose the doer.</p>
+          <div className="chips">
+            {options.map(p=>(
+              <button key={p.id} className="chip" aria-pressed={personGuess===p.id}
+                onClick={()=>setPersonGuess(p.id)}>
+                <span className="ta">{p.ta}</span>
+                <span className="en">{p.en}</span>
+              </button>
+            ))}
+          </div>
+          <button className="go" disabled={!ready} onClick={depart}>புறப்படு · Depart</button>
+        </div>
+      )}
+
+      {result && (
+        <div className={"panel verdict " + (result==="no" ? "bad" : "")}>
+          <h2>{result==="ok" ? "நல்லது! Cleared for departure." : "Wrong platform. Here is the rake."}</h2>
+          <p className="full">{answer.form}</p>
+          <table>
+            <thead><tr><th>CAR</th><th>PIECE</th><th>JOB</th></tr></thead>
+            <tbody>
+              <tr><td>engine</td><td className="m">{verb.root}</td><td>base — {verb.en}</td></tr>
+              {answer.noPerson
+                ? <tr><td>single wagon</td><td className="m">{answer.cars[1].txt}</td>
+                    <td>future + non-human subject, fused into one piece</td></tr>
+                : (<React.Fragment>
+                    <tr><td>middle</td><td className="m">{answer.cars[1].txt}</td><td>{tenseName.ta} · {tenseName.en.toLowerCase()}</td></tr>
+                    <tr><td>caboose</td><td className="m">{answer.cars[2].txt}</td><td>{person.ta} · {person.en}</td></tr>
+                  </React.Fragment>)}
+            </tbody>
+          </table>
+          {answer.noPerson && <p className="note">
+            With அது / அவை in the future, Tamil drops the person car: {verb.root} → {answer.form} covers both
+            "it will {verb.en}" and "they will {verb.en}".
+          </p>}
+          {!answer.noPerson && person.neut === "sg" && tense === "past" && verb.pastN[1] === "இய்" &&
+            <p className="note">Verbs that take இன் in the past switch to இய் before அது: {join(verb.past[0],"ஆன்")} but {answer.form}.</p>}
+          <button className="go" onClick={()=>fresh(level, mode)}>அடுத்த ரயில் · Next train</button>
+        </div>
+      )}
+
+      <footer>
+        Reading order is fixed: base → tense → person. Every car is a real morpheme, so you can
+        swap the caboose and keep the same journey: {join(verb.past[0],"ஏன்")} · {join(verb.past[0],"ஆள்")} · {join(verb.past[0],"ஓம்")}.
+      </footer>
+    </React.Fragment>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>
